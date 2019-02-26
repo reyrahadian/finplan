@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FinPlan.Domain;
+using FinPlan.Domain.Accounts;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinPlan.Web.Data
+namespace FinPlan.Infrastructure.EntityFramework
 {
 	public class ApplicationDbContext : IdentityDbContext
 	{
@@ -12,5 +11,9 @@ namespace FinPlan.Web.Data
 			: base(options)
 		{
 		}
+
+		public DbSet<Account> Accounts { get; set; }
+		public DbSet<Category> Categories { get; set; }
+		public DbSet<Transaction> Transactions { get; set; }
 	}
 }

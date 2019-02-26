@@ -1,11 +1,9 @@
-﻿using System;
-using FinPlan.Web.Data;
+﻿using FinPlan.Infrastructure.Bootstrapper;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace FinPlan.Web
 {
@@ -21,10 +19,7 @@ namespace FinPlan.Web
 
 				try
 				{
-					var context = services.GetRequiredService<ApplicationDbContext>();
-					context.Database.Migrate();
-
-					DbUserInitializer.Initialize(services.GetRequiredService<UserManager<IdentityUser>>());
+					Bootstrapper.InitializeDb(services);
 				}
 				catch (Exception ex)
 				{
