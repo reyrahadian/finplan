@@ -20,4 +20,11 @@
     <ProjectReference Include="..\FinPlan.Infrastructure.Bootstrapper\FinPlan.Infrastructure.Bootstrapper.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Areas\Account\Data\" />
+    <Folder Include="Areas\Report\Data\" />
+    <Folder Include="Areas\Report\Models\" />
+  </ItemGroup>
+
 </Project>

@@ -18,7 +18,7 @@ namespace FinPlan.Infrastructure.Bootstrapper
 				options.UseSqlServer(
 					configuration.GetConnectionString("DefaultConnection")));
 			services.AddDefaultIdentity<IdentityUser>()
-				.AddDefaultUI(UIFramework.Bootstrap4)
+				//.AddDefaultUI(UIFramework.Bootstrap4)
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
 			services.AddMediatR(typeof(FinPlan.ApplicationService.Accounts.AccountCategory).Assembly);

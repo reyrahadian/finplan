@@ -2,9 +2,8 @@
 
 @{
 	ViewBag.Title = "Accounts";
-	Layout = "_Layout";
 }
 
 <h2>Accounts</h2>
 <partial name="_MessagePartial" />
-<a asp-controller="Account" asp-action="Create">Create</a>
+<a asp-area="Account" asp-controller="Account" asp-action="Create">Create</a>

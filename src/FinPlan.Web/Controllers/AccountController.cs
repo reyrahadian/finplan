@@ -1,43 +1,76 @@
-﻿using System.Threading.Tasks;
-using FinPlan.ApplicationService.Accounts;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using FinPlan.Web.ViewModels;
-using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 
 namespace FinPlan.Web.Controllers
 {
-	public class AccountController : Controller
-	{
-		private readonly IMediator _service;
+    public class AccountController : Controller
+    {
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-		public AccountController(IMediator service)
-		{
-			_service = service;
-		}
+        public AccountController(SignInManager<IdentityUser> signInManager)
+        {
+            _signInManager = signInManager;
+        }
 
-		public async Task<IActionResult> Index()
-		{
-			var accounts = await _service.Send(new GetAccountsRequest());
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            return View();
+        }
 
-			return View(accounts);
-		}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(AuthenticationFormViewModel model, string returnUrl = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/report/dashboard/index");
+            if (ModelState.IsValid)
+            {
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, 
+                // set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(model.Email,
+                    model.Password, model.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    //_logger.LogInformation("User logged in.");                    
+                    return LocalRedirect(returnUrl);
+                }
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                }
+                if (result.IsLockedOut)
+                {
+                    //_logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
+            }
 
-		public IActionResult Create()
-		{
-			return View(new AccountFormViewModel());
-		}
+            return View(model);
+        }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult Create(AccountFormViewModel model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(model);
-			}
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
 
-			TempData["message"] = "New account has been successfully created";
-			return View("Index");
-		}
-	}
+            return View("Login");
+        }
+
+        public IActionResult Denied()
+        {
+            return View();
+        }
+    }
 }

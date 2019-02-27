@@ -1,4 +1,5 @@
 ﻿using FinPlan.Infrastructure.Bootstrapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +32,7 @@ namespace FinPlan.Web
 
 			// compose services
 			Bootstrapper.InitializeServices(services, Configuration);
-
+		   
 			services.AddMvc(config =>
 			{
 				// using Microsoft.AspNetCore.Mvc.Authorization;
@@ -41,6 +42,14 @@ namespace FinPlan.Web
 					.Build();
 				config.Filters.Add(new AuthorizeFilter(policy));
 			}).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+             
+		    services.AddAuthentication()
+		        .AddCookie(options =>
+		        {		            
+		            options.LoginPath = "/account/login";
+		            options.AccessDeniedPath = "/account/denied";
+		        });
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,17 +67,21 @@ namespace FinPlan.Web
 				app.UseHsts();
 			}
 
-			app.UseHttpsRedirection();
+			//app.UseHttpsRedirection();
 			app.UseStaticFiles();
-			app.UseCookiePolicy();
+			//app.UseCookiePolicy();
 
 			app.UseAuthentication();
 
 			app.UseMvc(routes =>
 			{
+			    routes.MapRoute(
+			        name : "areas",
+			        template : "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
+			    );
 				routes.MapRoute(
 					"default",
-					"{controller=Home}/{action=Index}/{id?}");
+					"{controller=Account}/{action=Login}/{id?}");			    
 			});
 		}
 	}
