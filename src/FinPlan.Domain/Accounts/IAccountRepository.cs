@@ -5,6 +5,9 @@ namespace FinPlan.Domain.Accounts
 {
 	public interface IAccountRepository
 	{
-		Task<List<Account>> GetAccounts();
+		Task<List<Account>> GetAccountsAsync();
+	    Task<Account> GetAccountByIdAsync(int id);
+	    Task DeleteByIdAsync(int requestId);
+	    Task CreateAccountAsync(Account account);
 	}
 }

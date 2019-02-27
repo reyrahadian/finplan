@@ -1,9 +1,42 @@
-﻿@model object
+﻿@model IEnumerable<FinPlan.ApplicationService.Accounts.AccountDto>
 
 @{
-	ViewBag.Title = "Accounts";
+    ViewBag.Title = "Accounts";
 }
 
 <h2>Accounts</h2>
 <partial name="_MessagePartial" />
 <a asp-area="Account" asp-controller="Account" asp-action="Create">Create</a>
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var count = 0;
+                }
+                @foreach (var account in Model)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@account.Name</td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "Account", new { area = "Account", id = account.Id })
+                        </td>
+                        <td>@Html.ActionLink("Delete", "Delete", "Account", new { area = "Account", id = account.Id })</td>
+                    </tr>
+                    count++;
+                }
+            </tbody>
+        </table>
+    </div>
+}
