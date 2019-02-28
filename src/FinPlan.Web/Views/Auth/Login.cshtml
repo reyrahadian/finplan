@@ -1,4 +1,4 @@
-﻿@model FinPlan.Web.ViewModels.AuthenticationFormViewModel
+﻿@model AuthenticationFormViewModel
 @{
     Layout = null;
 }
@@ -20,7 +20,7 @@
 </head>
 <body class="text-center">
     <div asp-validation-summary="All"></div>
-    <form asp-controller="Account" asp-action="Login" class="form-signin">
+    <form asp-controller="Auth" asp-action="Login" class="form-signin">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="inputEmail" class="sr-only">Email address</label>
         <input asp-for="Email" class="form-control" placeholder="Email address" required autofocus />

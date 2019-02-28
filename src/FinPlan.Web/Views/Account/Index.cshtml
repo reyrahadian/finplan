@@ -6,7 +6,7 @@
 
 <h2>Accounts</h2>
 <partial name="_MessagePartial" />
-<a asp-area="Account" asp-controller="Account" asp-action="Create">Create</a>
+<a asp-area="Account" asp-controller="Auth" asp-action="Create">Create</a>
 
 @if (Model.Any())
 {
@@ -22,7 +22,7 @@
             </thead>
             <tbody>
                 @{
-                    var count = 0;
+                    var count = 1;
                 }
                 @foreach (var account in Model)
                 {
@@ -30,9 +30,9 @@
                         <td>@count</td>
                         <td>@account.Name</td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", "Account", new { area = "Account", id = account.Id })
+	                        @Html.ActionLink("Edit", "Edit", "Auth", new { area = "Account", id = account.Id })
                         </td>
-                        <td>@Html.ActionLink("Delete", "Delete", "Account", new { area = "Account", id = account.Id })</td>
+                        <td>@Html.ActionLink("Delete", "Delete", "Auth", new { area = "Account", id = account.Id })</td>
                     </tr>
                     count++;
                 }

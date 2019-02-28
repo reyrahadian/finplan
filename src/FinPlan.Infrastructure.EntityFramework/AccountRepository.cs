@@ -24,16 +24,26 @@ namespace FinPlan.Infrastructure.EntityFramework
             return await _dbContext.Accounts.FindAsync(id);
         }
 
-        public async Task DeleteByIdAsync(int requestId)
+        public async Task<bool> DeleteByIdAsync(int requestId)
         {
             _dbContext.Accounts.Remove(await _dbContext.Accounts.FindAsync(requestId));
-            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync();
+	        return result != 0;
         }
 
-        public async Task CreateAccountAsync(Account account)
+        public async Task<bool> CreateAccountAsync(Account account)
         {
             await _dbContext.Accounts.AddAsync(account);
-            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync();
+	        return result != 0;
         }
+
+	    public async Task<bool> UpdateAccountAsync(Account account)
+	    {
+		    _dbContext.Accounts.Update(account);
+		    var result = await _dbContext.SaveChangesAsync();
+
+		    return result != 0;
+	    }
     }
 }

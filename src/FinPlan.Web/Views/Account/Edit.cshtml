@@ -1,0 +1,26 @@
+﻿@model FinPlan.Web.Models.Account.AccountFormViewModel
+
+@{
+	ViewBag.Title = "Edit Account";
+}
+
+<h2>Edit Account</h2>
+<div asp-validation-summary="All"></div>
+<form asp-controller="Account" asp-action="Edit" method="post">
+	<input asp-for="Id" type="hidden"/>
+	<div>
+		<label asp-for="Name"></label>
+		<input asp-for="Name"/>
+	</div>
+	<div>
+		<label asp-for="Category"></label>
+		<select asp-for="Category" asp-items="Model.Categories"></select>
+	</div>
+	<div>
+		<label asp-for="Type"></label>
+		<select asp-for="Type" asp-items="Model.Types"></select>
+	</div>
+	<div>
+		<button type="submit">Submit</button>
+	</div>
+</form>

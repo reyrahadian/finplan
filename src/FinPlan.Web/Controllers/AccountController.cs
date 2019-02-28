@@ -1,76 +1,124 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using FinPlan.Web.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using FinPlan.ApplicationService.Accounts;
+using FinPlan.Web.Models.Account;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 
 namespace FinPlan.Web.Controllers
 {
-    public class AccountController : Controller
-    {
-        private readonly SignInManager<IdentityUser> _signInManager;
+	public class AccountController : Controller
+	{
+		private readonly IMediator _service;
 
-        public AccountController(SignInManager<IdentityUser> signInManager)
-        {
-            _signInManager = signInManager;
-        }
+		public AccountController(IMediator service)
+		{
+			_service = service;
+		}
 
-        [AllowAnonymous]
-        public IActionResult Login()
-        {
-            return View();
-        }
+		public async Task<IActionResult> Index()
+		{
+			var accounts = await _service.Send(new GetAccountsRequest());
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(AuthenticationFormViewModel model, string returnUrl = null)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/report/dashboard/index");
-            if (ModelState.IsValid)
-            {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, 
-                // set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email,
-                    model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    //_logger.LogInformation("User logged in.");                    
-                    return LocalRedirect(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    //_logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
-                }
-            }
+			return View(accounts);
+		}
 
-            return View(model);
-        }
+		public IActionResult Create()
+		{
+			return View(new AccountFormViewModel());
+		}
 
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(AccountFormViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
 
-            return View("Login");
-        }
+			var result = await _service.Send(new CreateAccountCommand
+			{
+				Account = new AccountDto
+				{
+					Name = model.Name,
+					Category = model.Category.ToString(),
+					Type = model.Type.ToString(),
+					Owner = User.Identity.Name
 
-        public IActionResult Denied()
-        {
-            return View();
-        }
-    }
+				}
+			});
+			if (result.IsSuccessful)
+			{
+				TempData["message"] = "New account has been successfully created";
+				return RedirectToAction("Index");
+			}
+
+			ModelState.AddModelError("account", "Failed to create an account");
+			return View(model);
+		}
+
+		public async Task<IActionResult> Edit(int id)
+		{
+			var account = await _service.Send(new GetAccountByIdRequest { Id = id });
+			if (account == null)
+			{
+				return NotFound();
+			}
+
+			var model = new AccountFormViewModel();
+			model.MapFrom(account);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Edit(AccountFormViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var result = await _service.Send(new UpdateAccountCommand
+			{
+				Account = new AccountDto
+				{
+					Id = model.Id.Value,
+					Name = model.Name,
+					Category = model.Category.ToString(),
+					Type = model.Type.ToString()
+				}
+			});
+
+			if (result.IsSuccessful)
+			{
+				TempData["message"] = "account has been successfully updated";
+				return RedirectToAction("AccountView", new { id = @model.Id });
+			}
+
+			ModelState.AddModelError("account", "Failed to update the account");
+			return View(model);
+		}
+
+		public IActionResult Delete(int id)
+		{
+			_service.Send(new DeleteAccountByIdCommand { Id = id });
+
+			return View("Index");
+		}
+
+		public async Task<IActionResult> AccountView(int id)
+		{
+			var account = await _service.Send(new GetAccountByIdRequest { Id = id });
+			if (account == null)
+			{
+				return NotFound();
+			}
+
+			var model = new AccountViewModel();
+			model.Account = account;
+
+			return View(model);
+		}
+	}
 }

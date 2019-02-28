@@ -7,7 +7,8 @@ namespace FinPlan.Domain.Accounts
 	{
 		Task<List<Account>> GetAccountsAsync();
 	    Task<Account> GetAccountByIdAsync(int id);
-	    Task DeleteByIdAsync(int requestId);
-	    Task CreateAccountAsync(Account account);
+	    Task<bool> DeleteByIdAsync(int requestId);
+	    Task<bool> CreateAccountAsync(Account account);
+		Task<bool> UpdateAccountAsync(Account account);
 	}
 }

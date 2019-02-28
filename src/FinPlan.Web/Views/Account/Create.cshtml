@@ -1,4 +1,4 @@
-﻿@model FinPlan.Web.Areas.Account.Models.AccountFormViewModel
+﻿@model FinPlan.Web.Models.Account.AccountFormViewModel
 
 @{
 	ViewBag.Title = "Create Account";
@@ -6,7 +6,7 @@
 
 <h2>Create Account</h2>
 <div asp-validation-summary="All"></div>
-<form asp-controller="Account" asp-action="Create" method="post">
+<form asp-controller="Auth" asp-action="Create" method="post">
 	<div>
 		<label asp-for="Name"></label>
 		<input asp-for="Name" />

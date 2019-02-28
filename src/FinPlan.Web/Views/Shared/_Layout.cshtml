@@ -23,7 +23,7 @@
 		<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
 		<ul class="navbar-nav px-3">
 			<li class="nav-item text-nowrap">
-				<a class="nav-link" href="#">Sign out</a>
+				<a class="nav-link" href="@Url.Action("Logout","Auth")">Sign out</a>
 			</li>
 		</ul>
 	</nav>
@@ -32,9 +32,9 @@
 		<div class="row">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
 				<div class="sidebar-sticky">
-					<partial name="_NavigationPartial"/>
+					@await Component.InvokeAsync("NavigationMenu")
 				</div>
-			</nav>			
+			</nav>
 
 			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 				@RenderBody()

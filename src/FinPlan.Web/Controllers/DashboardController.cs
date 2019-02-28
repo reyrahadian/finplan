@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace FinPlan.Web.Areas.Report.Controllers
+namespace FinPlan.Web.Controllers
 {
-    [Area("Report")]
     public class DashboardController : Controller
     {
         public IActionResult Index()

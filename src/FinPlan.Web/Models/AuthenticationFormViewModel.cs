@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FinPlan.Web.ViewModels
+namespace FinPlan.Web.Models
 {
     public class AuthenticationFormViewModel
     {

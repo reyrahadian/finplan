@@ -6,29 +6,28 @@ using System.Threading.Tasks;
 
 namespace FinPlan.ApplicationService.Accounts
 {
-	public class CreateAccountCommand : IRequest<CommandResponse>
+	public class UpdateAccountCommand : IRequest<CommandResponse>
 	{
 		public AccountDto Account { get; set; }
 	}
 
-	public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, CommandResponse>
+	public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand, CommandResponse>
 	{
 		private readonly IAccountRepository _accountRepository;
 
-		public CreateAccountCommandHandler(IAccountRepository accountRepository)
+		public UpdateAccountCommandHandler(IAccountRepository accountRepository)
 		{
 			_accountRepository = accountRepository;
-		}		
+		}
 
-		async Task<CommandResponse> IRequestHandler<CreateAccountCommand, CommandResponse>.Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+		async Task<CommandResponse> IRequestHandler<UpdateAccountCommand, CommandResponse>.Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
 		{
-			var account = new Account();
+			var account = await _accountRepository.GetAccountByIdAsync(request.Account.Id);
 			account.Name = request.Account.Name;
 			account.Category = Enum.Parse<Domain.Accounts.AccountCategory>(request.Account.Category);
 			account.Type = Enum.Parse<Domain.Accounts.AccountType>(request.Account.Type);
 
-			var isSuccessful = await _accountRepository.CreateAccountAsync(account);
-
+			var isSuccessful = await _accountRepository.UpdateAccountAsync(account);
 			return new CommandResponse(isSuccessful);
 		}
 	}

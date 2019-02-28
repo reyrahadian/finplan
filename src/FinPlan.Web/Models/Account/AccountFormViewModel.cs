@@ -1,11 +1,11 @@
-﻿using FinPlan.ApplicationService.Accounts;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using FinPlan.ApplicationService.Accounts;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace FinPlan.Web.Areas.Account.Models
+namespace FinPlan.Web.Models.Account
 {
     public class AccountFormViewModel
     {

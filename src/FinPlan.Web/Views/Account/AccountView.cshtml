@@ -1,0 +1,12 @@
+﻿@model FinPlan.Web.Models.Account.AccountViewModel
+
+@{
+	ViewBag.Title = "title";
+	Layout = "_Layout";
+}
+
+<h2>@Model.Account.Name</h2>
+<partial name="_MessagePartial"/>
+<div>
+	<a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.Account.Id">Edit</a>
+</div>

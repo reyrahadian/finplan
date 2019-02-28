@@ -29,7 +29,7 @@ namespace FinPlan.ApplicationService.Accounts
 				Category = x.Category.ToString(),
 				Name = x.Name,
 				Type = x.Type.ToString(),
-				Owner = x.Owner.ToString()
+				Owner = x.Owner?.ToString()
 			}).ToList();
 		}
 	}
