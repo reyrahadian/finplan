@@ -6,10 +6,14 @@
 
 <h2>Create Account</h2>
 <div asp-validation-summary="All"></div>
-<form asp-controller="Auth" asp-action="Create" method="post">
+<form asp-controller="Account" asp-action="Create" method="post">
 	<div>
 		<label asp-for="Name"></label>
 		<input asp-for="Name" />
+	</div>
+	<div>
+		<label asp-for="Currency"></label>
+		<select asp-for="Currency" asp-items="Model.Currencies"></select>
 	</div>
 	<div>
 		<label asp-for="Category"></label>

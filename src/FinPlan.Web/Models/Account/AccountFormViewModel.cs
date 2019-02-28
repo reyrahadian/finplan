@@ -38,6 +38,9 @@ namespace FinPlan.Web.Models.Account
             new SelectListItem("Other Loan", AccountType.OtherLoan.ToString())
         };
 
+		public string Currency { get; set; }
+		public IEnumerable<SelectListItem> Currencies { get; set; } = new List<SelectListItem>();
+
         public void MapFrom(AccountDto account)
         {
             Id = account.Id;

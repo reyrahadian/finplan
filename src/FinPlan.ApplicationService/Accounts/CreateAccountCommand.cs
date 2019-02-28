@@ -1,6 +1,8 @@
 ﻿using FinPlan.Domain.Accounts;
 using MediatR;
 using System;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,9 +23,10 @@ namespace FinPlan.ApplicationService.Accounts
 		}		
 
 		async Task<CommandResponse> IRequestHandler<CreateAccountCommand, CommandResponse>.Handle(CreateAccountCommand request, CancellationToken cancellationToken)
-		{
+		{			
 			var account = new Account();
 			account.Name = request.Account.Name;
+			account.Currency = request.Account.Currency;
 			account.Category = Enum.Parse<Domain.Accounts.AccountCategory>(request.Account.Category);
 			account.Type = Enum.Parse<Domain.Accounts.AccountType>(request.Account.Type);
 

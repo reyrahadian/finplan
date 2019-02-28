@@ -31,7 +31,7 @@ namespace FinPlan.Web.ViewComponents
 			{
 				items.AddRange(accounts.Select(x => new NavigationMenuViewModel
 				{
-					Title = x.Name,
+					Title = $"{x.Name} ({x.Type.ToString()})",
 					Uri = Url.Action("AccountView", "Account", new { id = x.Id })
 				}));
 			}

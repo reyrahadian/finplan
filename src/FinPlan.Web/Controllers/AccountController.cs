@@ -1,7 +1,10 @@
 ﻿using FinPlan.ApplicationService.Accounts;
+using FinPlan.ApplicationService.Currency;
 using FinPlan.Web.Models.Account;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FinPlan.Web.Controllers
@@ -22,9 +25,13 @@ namespace FinPlan.Web.Controllers
 			return View(accounts);
 		}
 
-		public IActionResult Create()
+		public async Task<IActionResult> Create()
 		{
-			return View(new AccountFormViewModel());
+			var currencies = await _service.Send(new GetCurrenciesRequest());
+			var model = new AccountFormViewModel();
+			model.Currencies = currencies.Select(x => new SelectListItem(x.EnglishName, x.ISOCurrencySymbol));
+
+			return View(model);
 		}
 
 		[HttpPost]
@@ -54,6 +61,10 @@ namespace FinPlan.Web.Controllers
 			}
 
 			ModelState.AddModelError("account", "Failed to create an account");
+
+			var currencies = await _service.Send(new GetCurrenciesRequest());			
+			model.Currencies = currencies.Select(x => new SelectListItem(x.EnglishName, x.ISOCurrencySymbol));
+
 			return View(model);
 		}
 
@@ -66,6 +77,8 @@ namespace FinPlan.Web.Controllers
 			}
 
 			var model = new AccountFormViewModel();
+			var currencies = await _service.Send(new GetCurrenciesRequest());
+			model.Currencies = currencies.Select(x => new SelectListItem(x.EnglishName, x.ISOCurrencySymbol));
 			model.MapFrom(account);
 
 			return View(model);
@@ -97,6 +110,9 @@ namespace FinPlan.Web.Controllers
 			}
 
 			ModelState.AddModelError("account", "Failed to update the account");
+
+			var currencies = await _service.Send(new GetCurrenciesRequest());
+			model.Currencies = currencies.Select(x => new SelectListItem(x.EnglishName, x.ISOCurrencySymbol));
 			return View(model);
 		}
 
