@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace FinPlan.Domain
+namespace FinPlan.Domain.Currencies
 {
 	public class CurrencyService
 	{

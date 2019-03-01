@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FinPlan.ApplicationService\FinPlan.ApplicationService.csproj" />
+    <ProjectReference Include="..\FinPlan.Infrastructure.CsvParser\FinPlan.Infrastructure.CsvParser.csproj" />
     <ProjectReference Include="..\FinPlan.Infrastructure.EntityFramework\FinPlan.Infrastructure.EntityFramework.csproj" />
   </ItemGroup>
 

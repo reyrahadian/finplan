@@ -1,4 +1,4 @@
-﻿namespace FinPlan.Domain
+﻿namespace FinPlan.ApplicationService.Currencies
 {
 	public class Currency
 	{

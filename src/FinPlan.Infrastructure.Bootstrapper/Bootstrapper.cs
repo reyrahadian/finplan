@@ -1,8 +1,9 @@
-﻿using FinPlan.Domain.Accounts;
+﻿using FinPlan.ApplicationService;
+using FinPlan.Domain.Accounts;
+using FinPlan.Infrastructure.CsvParser;
 using FinPlan.Infrastructure.EntityFramework;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,7 @@ namespace FinPlan.Infrastructure.Bootstrapper
 			services.AddMediatR(typeof(FinPlan.ApplicationService.Accounts.AccountCategory).Assembly);
 
 			services.AddScoped<IAccountRepository, AccountRepository>();
+			services.AddScoped<IBankStatementCsvParser, BankStatementCsvParser>();
 		}
 
 		public static void InitializeDb(IServiceProvider serviceProvider)

@@ -1,0 +1,51 @@
+﻿@using FinPlan.ApplicationService.Transactions
+@model FinPlan.Web.Models.Account.ImportBankStatementViewModel
+
+@{
+	ViewBag.Title = "Import Bank Statement";
+	Layout = "_Layout";
+}
+
+<h2>Import Bank Statement</h2>
+<div asp-validation-summary="All"></div>
+<form asp-controller="Account" asp-action="ImportBankStatement" method="post" enctype="multipart/form-data">
+	<input asp-for="AccountId" type="hidden" />
+	<input asp-for="UploadedFilePath" type="hidden" />
+	@if (!string.IsNullOrWhiteSpace(Model.UploadedFilePath))
+	{
+		//display previewed transactions
+		<table border="1px">
+			<thead>
+			<th>Date</th>
+			<th>Title</th>
+			<th>Debit</th>
+			<th>Credit</th>
+			</thead>
+			<tbody>
+				@foreach (var transaction in Model.Transactions)
+				{
+					<tr>
+						<td>@transaction.Date.GetValueOrDefault().ToString("dd MMM yyyy")</td>
+						<td>
+							@transaction.Title
+							@if (!string.IsNullOrWhiteSpace(transaction.Note))
+							{
+								<br />
+								@Html.Raw(transaction.Note)
+							}
+						</td>
+						<td>@(transaction.Type == TransactionType.Expense ? transaction.Amount.ToString("#.##") : string.Empty)</td>
+						<tD>@(transaction.Type == TransactionType.Income ? transaction.Amount.ToString("#.##") : string.Empty)</tD>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<input asp-for="HasConfirmedToImport" value="true" type="hidden" />
+		<button type="submit">Submit</button>
+	}
+	else
+	{
+		<input type="file" name="file" />
+		<button type="submit">Submit</button>
+	}
+</form>

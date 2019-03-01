@@ -1,11 +1,11 @@
-﻿using FinPlan.Domain;
-using MediatR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FinPlan.Domain.Currencies;
+using MediatR;
 
-namespace FinPlan.ApplicationService.Currency
+namespace FinPlan.ApplicationService.Currencies
 {
 	public class GetCurrenciesRequest : IRequest<IEnumerable<Currency>>
 	{

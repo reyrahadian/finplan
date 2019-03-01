@@ -1,9 +1,11 @@
 ﻿using FinPlan.ApplicationService.Accounts;
-using FinPlan.ApplicationService.Currency;
+using FinPlan.ApplicationService.Currencies;
 using FinPlan.Web.Models.Account;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,10 +14,12 @@ namespace FinPlan.Web.Controllers
 	public class AccountController : Controller
 	{
 		private readonly IMediator _service;
+		private readonly IHostingEnvironment _hostingEnvironment;
 
-		public AccountController(IMediator service)
+		public AccountController(IMediator service, IHostingEnvironment hostingEnvironment)
 		{
 			_service = service;
+			_hostingEnvironment = hostingEnvironment;
 		}
 
 		public async Task<IActionResult> Index()
@@ -62,7 +66,7 @@ namespace FinPlan.Web.Controllers
 
 			ModelState.AddModelError("account", "Failed to create an account");
 
-			var currencies = await _service.Send(new GetCurrenciesRequest());			
+			var currencies = await _service.Send(new GetCurrenciesRequest());
 			model.Currencies = currencies.Select(x => new SelectListItem(x.EnglishName, x.ISOCurrencySymbol));
 
 			return View(model);
@@ -135,6 +139,68 @@ namespace FinPlan.Web.Controllers
 			model.Account = account;
 
 			return View(model);
+		}
+
+		public IActionResult ImportBankStatement(int id)
+		{
+			return View(new ImportBankStatementViewModel
+			{
+				AccountId = id
+			});
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ImportBankStatement(ImportBankStatementViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			if (model.File.Length > 0)
+			{
+				var fileUploadsFolderPath = _hostingEnvironment.ContentRootPath + "\\fileUploads";
+				if (!Directory.Exists(fileUploadsFolderPath))
+				{
+					Directory.CreateDirectory(fileUploadsFolderPath);
+				}
+				var filePath = fileUploadsFolderPath + "\\" + model.File.FileName;
+				if (!System.IO.File.Exists(filePath))
+				{
+					using (var stream = new FileStream(filePath, FileMode.Create))
+					{
+						await model.File.CopyToAsync(stream);
+					}
+				}
+
+				model.UploadedFilePath = filePath;
+			}
+
+			if (model.HasConfirmedToImport)
+			{
+				var result = await _service.Send(new ImportBankStatementCommand
+				{
+					FilePath = model.UploadedFilePath
+				});
+				if (result.IsSuccessful)
+				{
+					return RedirectToAction("AccountView", new { id = model.AccountId });
+				}
+
+				TempData["message"] = "Failed to import bank statement";
+				return View(model);
+			}
+			else
+			{
+				var result = await _service.Send(new ImportBankStatementPreviewRequest
+				{
+					FilePath = model.UploadedFilePath
+				});
+
+				model.Transactions = result;
+				return View(model);
+			}
 		}
 	}
 }
