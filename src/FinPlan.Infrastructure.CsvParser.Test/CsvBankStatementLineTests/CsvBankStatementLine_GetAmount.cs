@@ -1,6 +1,6 @@
-﻿using System;
-using FinPlan.ApplicationService.Transactions;
+﻿using FinPlan.ApplicationService.Transactions;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace FinPlan.Infrastructure.CsvParser.Test.CsvBankStatementLineTests

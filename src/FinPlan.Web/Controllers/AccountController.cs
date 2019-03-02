@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace FinPlan.Web.Controllers
 {
@@ -15,11 +16,13 @@ namespace FinPlan.Web.Controllers
 	{
 		private readonly IMediator _service;
 		private readonly IHostingEnvironment _hostingEnvironment;
+		private readonly UserManager<IdentityUser> _userManager;
 
-		public AccountController(IMediator service, IHostingEnvironment hostingEnvironment)
+		public AccountController(IMediator service, IHostingEnvironment hostingEnvironment,UserManager<IdentityUser> userManager)
 		{
 			_service = service;
 			_hostingEnvironment = hostingEnvironment;
+			_userManager = userManager;
 		}
 
 		public async Task<IActionResult> Index()
@@ -158,7 +161,7 @@ namespace FinPlan.Web.Controllers
 				return View(model);
 			}
 
-			if (model.File.Length > 0)
+			if (model.File?.Length > 0)
 			{
 				var fileUploadsFolderPath = _hostingEnvironment.ContentRootPath + "\\fileUploads";
 				if (!Directory.Exists(fileUploadsFolderPath))
@@ -181,8 +184,12 @@ namespace FinPlan.Web.Controllers
 			{
 				var result = await _service.Send(new ImportBankStatementCommand
 				{
-					FilePath = model.UploadedFilePath
+					FilePath = model.UploadedFilePath,
+					Year = model.Year,
+					AccountId = model.AccountId,
+					UserId = (await _userManager.GetUserAsync(User)).Id
 				});
+
 				if (result.IsSuccessful)
 				{
 					return RedirectToAction("AccountView", new { id = model.AccountId });
@@ -195,7 +202,8 @@ namespace FinPlan.Web.Controllers
 			{
 				var result = await _service.Send(new ImportBankStatementPreviewRequest
 				{
-					FilePath = model.UploadedFilePath
+					FilePath = model.UploadedFilePath,
+					Year = model.Year
 				});
 
 				model.Transactions = result;

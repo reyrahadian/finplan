@@ -10,9 +10,11 @@
 <div asp-validation-summary="All"></div>
 <form asp-controller="Account" asp-action="ImportBankStatement" method="post" enctype="multipart/form-data">
 	<input asp-for="AccountId" type="hidden" />
-	<input asp-for="UploadedFilePath" type="hidden" />
+	<input name="UploadedFilePath" value="@Model.UploadedFilePath" type="hidden" />
 	@if (!string.IsNullOrWhiteSpace(Model.UploadedFilePath))
 	{
+		<input asp-for="HasConfirmedToImport" value="true" type="hidden" />
+		<input asp-for="Year" type="hidden"/>
 		//display previewed transactions
 		<table border="1px">
 			<thead>
@@ -40,11 +42,11 @@
 				}
 			</tbody>
 		</table>
-		<input asp-for="HasConfirmedToImport" value="true" type="hidden" />
 		<button type="submit">Submit</button>
 	}
 	else
 	{
+		<input asp-for="Year" />
 		<input type="file" name="file" />
 		<button type="submit">Submit</button>
 	}

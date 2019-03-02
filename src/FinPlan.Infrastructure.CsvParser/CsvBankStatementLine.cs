@@ -39,6 +39,7 @@ namespace FinPlan.Infrastructure.CsvParser
 				IsTransactionAmountText).Select(x =>
 			{
 				decimal? result = null;
+				x = x.TrimStart('$');
 				if (decimal.TryParse(x, out var output))
 				{
 					result = output;
@@ -52,6 +53,8 @@ namespace FinPlan.Infrastructure.CsvParser
 
 		private static bool IsTransactionAmountText(string x)
 		{
+			x = x.TrimStart('$');
+
 			var centPosition = x.IndexOf('.');
 			var isCorrectCentPosition = centPosition == x.Length - 3 && centPosition > 0;
 			if (isCorrectCentPosition && decimal.TryParse(x, out var output))
@@ -106,7 +109,7 @@ namespace FinPlan.Infrastructure.CsvParser
 			return GetDate().HasValue && !string.IsNullOrWhiteSpace(GetTitle()) && !GetAmount().HasValue;
 		}
 
-		public string GetNote()
+		public string GetNote(TransactionType? type = null)
 		{
 			if (string.IsNullOrWhiteSpace(Text))
 			{
@@ -115,7 +118,7 @@ namespace FinPlan.Infrastructure.CsvParser
 
 			if (string.IsNullOrWhiteSpace(GetTitle()))
 			{
-				if (GetAmount().HasValue)
+				if (GetAmount().HasValue || (type.HasValue && type == TransactionType.Income))
 				{
 					var words = Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 					var result = new StringBuilder();
@@ -123,7 +126,7 @@ namespace FinPlan.Infrastructure.CsvParser
 					{
 						if (IsTransactionAmountText(word))
 						{
-							break;							
+							break;
 						}
 
 						result.Append(word + " ");
@@ -140,14 +143,14 @@ namespace FinPlan.Infrastructure.CsvParser
 
 		public TransactionType? GetTransactionType()
 		{
-			if (!GetAmount().HasValue)
-			{
-				return null;
-			}
-
 			if (IsCreditTransaction())
 			{
 				return TransactionType.Income;
+			}
+
+			if (!GetAmount().HasValue)
+			{
+				return null;
 			}
 
 			return TransactionType.Expense;

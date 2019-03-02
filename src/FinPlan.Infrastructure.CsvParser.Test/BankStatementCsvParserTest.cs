@@ -1,8 +1,8 @@
 using FinPlan.ApplicationService.Transactions;
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Xunit;
 
 namespace FinPlan.Infrastructure.CsvParser.Test
@@ -13,7 +13,7 @@ namespace FinPlan.Infrastructure.CsvParser.Test
 		public void Parse_Should_Return_Correct_Result()
 		{
 			var csvParser = new BankStatementCsvParser();
-			var transactions = csvParser.Parse("statement-commbank-1.csv");
+			var transactions = csvParser.Parse("statement-commbank-1.csv", 2018);
 
 			transactions.ToList().SequenceEqual(GetCSvParserExpectedResult(), new TransactionDtoComparer()).Should().BeTrue();
 		}
@@ -37,7 +37,7 @@ namespace FinPlan.Infrastructure.CsvParser.Test
 			var expectedResult = new List<TransactionDto>();
 			expectedResult.Add(new TransactionDto
 			{
-				Date = new DateTime(DateTime.Now.Year, 7, 2),
+				Date = new DateTime(2018, 7, 2),
 				Title = "Direct Debit 323133 IPAYRENT",
 				Note = "RAY WHITE 79731165",
 				Amount = 1739.65m,
@@ -45,7 +45,7 @@ namespace FinPlan.Infrastructure.CsvParser.Test
 			});
 			expectedResult.Add(new TransactionDto
 			{
-				Date = new DateTime(DateTime.Now.Year, 7, 3),
+				Date = new DateTime(2018, 7, 3),
 				Title = "A & R BOULOS PTY LTQPS MOUNT WAVERLE AU",
 				Note = "Card xx2311<br/>Value Date: 02/07/2018",
 				Amount = 3.70m,
@@ -53,7 +53,7 @@ namespace FinPlan.Infrastructure.CsvParser.Test
 			});
 			expectedResult.Add(new TransactionDto
 			{
-				Date = new DateTime(DateTime.Now.Year, 7, 3),
+				Date = new DateTime(2018, 7, 3),
 				Title = "WOOLWORTHS 3138 ST KIL ST KILDA AUS",
 				Note = "Card xx2311<br/>Value Date: 30/06/2018",
 				Amount = 60.31m,
@@ -61,7 +61,7 @@ namespace FinPlan.Infrastructure.CsvParser.Test
 			});
 			expectedResult.Add(new TransactionDto
 			{
-				Date = new DateTime(DateTime.Now.Year, 7, 3),
+				Date = new DateTime(2018, 7, 3),
 				Title = "PUBLIC TRANSPORT VICT DOCKLANDS AUS",
 				Note = "Card xx2311<br/>Value Date: 28/06/2018",
 				Amount = 50.00m,
@@ -69,10 +69,18 @@ namespace FinPlan.Infrastructure.CsvParser.Test
 			});
 			expectedResult.Add(new TransactionDto
 			{
-				Date = new DateTime(DateTime.Now.Year, 10, 9),
+				Date = new DateTime(2018, 10, 9),
 				Title = "DR TURY NION PARKVILLE VICAU",
 				Amount = 200m,
 				Type = TransactionType.Expense
+			});
+			expectedResult.Add(new TransactionDto
+			{
+				Date = new DateTime(2018, 9, 4),
+				Title = "Transfer from MEDINA LEA CommBank app",
+				Note = "mam",
+				Amount = 15m,
+				Type = TransactionType.Income
 			});
 			return expectedResult;
 		}

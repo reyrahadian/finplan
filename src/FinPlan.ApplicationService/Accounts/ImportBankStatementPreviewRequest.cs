@@ -9,6 +9,7 @@ namespace FinPlan.ApplicationService.Accounts
 	public class ImportBankStatementPreviewRequest : IRequest<IEnumerable<TransactionDto>>
 	{
 		public string FilePath { get; set; }
+		public int Year { get; set; }
 	}
 
 	public class ImportBankStatementPreviewHandler : IRequestHandler<ImportBankStatementPreviewRequest, IEnumerable<TransactionDto>>
@@ -22,7 +23,7 @@ namespace FinPlan.ApplicationService.Accounts
 
 		public Task<IEnumerable<TransactionDto>> Handle(ImportBankStatementPreviewRequest request, CancellationToken cancellationToken)
 		{
-			return Task.FromResult(_bankStatementCsvParser.Parse(request.FilePath));
+			return Task.FromResult(_bankStatementCsvParser.Parse(request.FilePath, request.Year));
 		}
 	}
 }

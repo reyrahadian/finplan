@@ -5,6 +5,6 @@ namespace FinPlan.ApplicationService
 {
 	public interface IBankStatementCsvParser
 	{
-		IEnumerable<TransactionDto> Parse(string filePath);
+		IEnumerable<TransactionDto> Parse(string filePath, int year);
 	}
 }
