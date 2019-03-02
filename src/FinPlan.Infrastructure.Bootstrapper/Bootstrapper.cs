@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using FinPlan.Domain.Transactions;
 
 namespace FinPlan.Infrastructure.Bootstrapper
 {
@@ -26,6 +27,7 @@ namespace FinPlan.Infrastructure.Bootstrapper
 
 			services.AddScoped<IAccountRepository, AccountRepository>();
 			services.AddScoped<IBankStatementCsvParser, BankStatementCsvParser>();
+			services.AddScoped<ITransactionRepository, TransactionRepository>();
 		}
 
 		public static void InitializeDb(IServiceProvider serviceProvider)

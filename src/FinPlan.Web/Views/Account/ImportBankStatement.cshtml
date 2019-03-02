@@ -1,4 +1,4 @@
-﻿@using FinPlan.ApplicationService.Transactions
+﻿@using FinPlan.Web.ViewComponents.Account
 @model FinPlan.Web.Models.Account.ImportBankStatementViewModel
 
 @{
@@ -14,34 +14,8 @@
 	@if (!string.IsNullOrWhiteSpace(Model.UploadedFilePath))
 	{
 		<input asp-for="HasConfirmedToImport" value="true" type="hidden" />
-		<input asp-for="Year" type="hidden"/>
-		//display previewed transactions
-		<table border="1px">
-			<thead>
-			<th>Date</th>
-			<th>Title</th>
-			<th>Debit</th>
-			<th>Credit</th>
-			</thead>
-			<tbody>
-				@foreach (var transaction in Model.Transactions)
-				{
-					<tr>
-						<td>@transaction.Date.GetValueOrDefault().ToString("dd MMM yyyy")</td>
-						<td>
-							@transaction.Title
-							@if (!string.IsNullOrWhiteSpace(transaction.Note))
-							{
-								<br />
-								@Html.Raw(transaction.Note)
-							}
-						</td>
-						<td>@(transaction.Type == TransactionType.Expense ? transaction.Amount.ToString("#.##") : string.Empty)</td>
-						<tD>@(transaction.Type == TransactionType.Income ? transaction.Amount.ToString("#.##") : string.Empty)</tD>
-					</tr>
-				}
-			</tbody>
-		</table>
+		<input asp-for="Year" type="hidden" />				
+		@await Component.InvokeAsync(nameof(TransactionListing), new { transactions = Model.Transactions })
 		<button type="submit">Submit</button>
 	}
 	else

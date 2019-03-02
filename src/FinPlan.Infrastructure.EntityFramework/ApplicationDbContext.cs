@@ -1,5 +1,4 @@
-﻿using FinPlan.Domain;
-using FinPlan.Domain.Accounts;
+﻿using FinPlan.Domain.Accounts;
 using FinPlan.Domain.Transactions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

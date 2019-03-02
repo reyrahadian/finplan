@@ -5,12 +5,12 @@ using MediatR;
 
 namespace FinPlan.ApplicationService.Accounts
 {
-    public class GetAccountByIdRequest : IRequest<AccountDto>
+    public class GetAccountByIdQuery : IRequest<AccountDto>
     {
         public int Id { get; set; }
     }
 
-    public class GetAccountByIdHandler : IRequestHandler<GetAccountByIdRequest, AccountDto>
+    public class GetAccountByIdHandler : IRequestHandler<GetAccountByIdQuery, AccountDto>
     {
         private readonly IAccountRepository _accountRepository;
 
@@ -19,7 +19,7 @@ namespace FinPlan.ApplicationService.Accounts
             _accountRepository = accountRepository;
         }
 
-        public async Task<AccountDto> Handle(GetAccountByIdRequest request, CancellationToken cancellationToken)
+        public async Task<AccountDto> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
         {
             var account = await _accountRepository.GetAccountByIdAsync(request.Id);
 

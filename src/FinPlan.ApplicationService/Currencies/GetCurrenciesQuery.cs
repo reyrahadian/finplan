@@ -7,13 +7,13 @@ using MediatR;
 
 namespace FinPlan.ApplicationService.Currencies
 {
-	public class GetCurrenciesRequest : IRequest<IEnumerable<Currency>>
+	public class GetCurrenciesQuery : IRequest<IEnumerable<Currency>>
 	{
 	}
 
-	public class GetCurrenciesRequestHandler : IRequestHandler<GetCurrenciesRequest, IEnumerable<Currency>>
+	public class GetCurrenciesRequestHandler : IRequestHandler<GetCurrenciesQuery, IEnumerable<Currency>>
 	{
-		public Task<IEnumerable<Currency>> Handle(GetCurrenciesRequest request, CancellationToken cancellationToken)
+		public Task<IEnumerable<Currency>> Handle(GetCurrenciesQuery request, CancellationToken cancellationToken)
 		{
 			var currencyService = new CurrencyService();
 			return Task.FromResult(currencyService.GetCurrencies().Select(x => new Currency

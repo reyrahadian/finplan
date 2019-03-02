@@ -7,7 +7,12 @@ namespace FinPlan.ApplicationService.Accounts
 {
 	public class DeleteAccountByIdCommand : IRequest<CommandResponse>
 	{
-		public int Id { get; set; }
+		public DeleteAccountByIdCommand(int id)
+		{
+			Id = id;
+		}
+
+		public int Id { get; }
 	}
 
 	public class DeleteAccountByIdCommandHandler : IRequestHandler<DeleteAccountByIdCommand, CommandResponse>

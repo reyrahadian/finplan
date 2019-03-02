@@ -12,7 +12,7 @@ namespace FinPlan.Domain.Accounts
 		public AccountCategory Category { get; set; } = AccountCategory.SpendingAndSaving;
 		public AccountType Type { get; set; } = AccountType.Checking;
 		public IdentityUser Owner { get; set; }
-		public List<Transaction> Transactions { get; set; } = new List<Transaction>();
+		public virtual List<Transaction> Transactions { get; set; } = new List<Transaction>();
 
 		public Response AddTransactionsByUserId(IEnumerable<Transaction> transactions, string userId)
 		{

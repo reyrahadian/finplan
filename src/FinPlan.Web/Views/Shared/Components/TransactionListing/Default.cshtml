@@ -1,0 +1,40 @@
+﻿@using FinPlan.ApplicationService.Transactions
+@model FinPlan.Web.ViewComponents.Account.TransactionListingViewModel
+
+<table border="1px">
+	<tr>
+		<th>Date</th>
+		<th>Title</th>
+		<th>Debit</th>
+		<th>Credit</th>
+		@if (Model.ShowActionButtons)
+		{
+			<th></th>
+		}
+	</tr>
+	<tbody>
+		@foreach (var transaction in Model.Transactions)
+		{
+			<tr>
+				<td>@transaction.Date.ToString("dd MMM yyyy")</td>
+				<td>
+					@transaction.Title
+					@if (!string.IsNullOrWhiteSpace(transaction.Note))
+					{
+						<br />
+						@Html.Raw(transaction.Note)
+					}
+				</td>
+				<td>@(transaction.Type == TransactionType.Expense ? transaction.Amount.ToString("#.##") : string.Empty)</td>
+				<td>@(transaction.Type == TransactionType.Income ? transaction.Amount.ToString("#.##") : string.Empty)</td>
+				@if (Model.ShowActionButtons)
+				{
+					<td>
+						<a asp-controller="Account" asp-action="EditTransaction" asp-route-accountId="@transaction.Account.Id" asp-route-transactionId="@transaction.Id">Edit</a> |
+						<a asp-controller="Account" asp-action="DeleteTransaction" asp-route-accountId="@transaction.Account.Id" asp-route-transactionId="@transaction.Id">Delete</a>
+					</td>
+				}
+			</tr>
+		}
+	</tbody>
+</table>

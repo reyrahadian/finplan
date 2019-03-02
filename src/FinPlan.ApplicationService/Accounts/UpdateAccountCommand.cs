@@ -8,7 +8,12 @@ namespace FinPlan.ApplicationService.Accounts
 {
 	public class UpdateAccountCommand : IRequest<CommandResponse>
 	{
-		public AccountDto Account { get; set; }
+		public UpdateAccountCommand(AccountDto account)
+		{
+			Account = account;
+		}
+
+		public AccountDto Account { get; }
 	}
 
 	public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand, CommandResponse>

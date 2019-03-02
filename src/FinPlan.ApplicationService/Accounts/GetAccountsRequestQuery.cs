@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace FinPlan.ApplicationService.Accounts
 {
-	public class GetAccountsRequest : IRequest<List<AccountDto>>
+	public class GetAccountsRequestQuery : IRequest<List<AccountDto>>
 	{
 	}
 
-	public class GetAccountsHandler : IRequestHandler<GetAccountsRequest, List<AccountDto>>
+	public class GetAccountsHandler : IRequestHandler<GetAccountsRequestQuery, List<AccountDto>>
 	{
 		private readonly IAccountRepository _accountRepository;
 
@@ -20,7 +20,7 @@ namespace FinPlan.ApplicationService.Accounts
 			_accountRepository = accountRepository;
 		}
 
-		public async Task<List<AccountDto>> Handle(GetAccountsRequest request, CancellationToken cancellationToken)
+		public async Task<List<AccountDto>> Handle(GetAccountsRequestQuery request, CancellationToken cancellationToken)
 		{
 			var accounts = await _accountRepository.GetAccountsAsync();
 			return accounts.Select(x => new AccountDto

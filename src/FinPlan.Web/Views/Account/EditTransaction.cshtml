@@ -1,0 +1,40 @@
+﻿@model FinPlan.Web.Models.Account.TransactionFormViewModel
+
+@{
+	ViewBag.Title = "Edit Transaction";
+	Layout = "_Layout";
+}
+
+<h2>Edit Transaction</h2>
+<div asp-validation-summary="All"></div>
+<form asp-controller="Account" asp-action="EditTransaction" method="post">
+	<input asp-for="Id" type="hidden" />
+	<input asp-for="AccountId" type="hidden" />
+	<div>
+		<label asp-for="Date"></label>
+		<input asp-for="Date" />
+	</div>
+	<div>
+		<label asp-for="Title"></label>
+		<input asp-for="Title" />
+	</div>
+	<div>
+		<label asp-for="Note"></label>
+		<textarea asp-for="Note"></textarea>
+	</div>
+	<div>
+		<label asp-for="Amount"></label>
+		<input asp-for="Amount" />
+	</div>
+	<div>
+		<label asp-for="Category"></label>
+		<input asp-for="Category" />
+	</div>
+	<div>
+		<label asp-for="Type"></label>
+		<select asp-for="Title" asp-items="Model.Types"></select>
+	</div>
+	<div>
+		<button type="submit">Submit</button>
+	</div>
+</form>

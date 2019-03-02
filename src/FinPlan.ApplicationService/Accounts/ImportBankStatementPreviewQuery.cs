@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace FinPlan.ApplicationService.Accounts
 {
-	public class ImportBankStatementPreviewRequest : IRequest<IEnumerable<TransactionDto>>
+	public class ImportBankStatementPreviewQuery : IRequest<IEnumerable<TransactionDto>>
 	{
 		public string FilePath { get; set; }
 		public int Year { get; set; }
 	}
 
-	public class ImportBankStatementPreviewHandler : IRequestHandler<ImportBankStatementPreviewRequest, IEnumerable<TransactionDto>>
+	public class ImportBankStatementPreviewHandler : IRequestHandler<ImportBankStatementPreviewQuery, IEnumerable<TransactionDto>>
 	{
 		private readonly IBankStatementCsvParser _bankStatementCsvParser;
 
@@ -21,7 +21,7 @@ namespace FinPlan.ApplicationService.Accounts
 			_bankStatementCsvParser = bankStatementCsvParser;
 		}
 
-		public Task<IEnumerable<TransactionDto>> Handle(ImportBankStatementPreviewRequest request, CancellationToken cancellationToken)
+		public Task<IEnumerable<TransactionDto>> Handle(ImportBankStatementPreviewQuery request, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(_bankStatementCsvParser.Parse(request.FilePath, request.Year));
 		}

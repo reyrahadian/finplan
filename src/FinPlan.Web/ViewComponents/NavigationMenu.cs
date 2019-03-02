@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace FinPlan.Web.ViewComponents
 {
-	public class NavigationMenuViewComponent : ViewComponent
+	public class NavigationMenu : ViewComponent
 	{
 		private readonly IMediator _service;
 
-		public NavigationMenuViewComponent(IMediator service)
+		public NavigationMenu(IMediator service)
 		{
 			_service = service;
 		}
@@ -26,7 +26,7 @@ namespace FinPlan.Web.ViewComponents
 				Uri = Url.Action("Index", "Dashboard")
 			});
 
-			var accounts = await _service.Send(new GetAccountsRequest());
+			var accounts = await _service.Send(new GetAccountsRequestQuery());
 			if (accounts.Any())
 			{
 				items.AddRange(accounts.Select(x => new NavigationMenuViewModel
