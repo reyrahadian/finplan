@@ -2,6 +2,7 @@
 using FinPlan.ApplicationService.Currencies;
 using FinPlan.ApplicationService.Transactions;
 using FinPlan.Web.Models.Account;
+using FinPlan.Web.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -63,7 +64,7 @@ namespace FinPlan.Web.Controllers
 			);
 			if (result.IsSuccessful)
 			{
-				TempData["message"] = "New account has been successfully created";
+				FlashMessage.SetMessage(TempData, "New account has been successfully created");
 				return RedirectToAction("Index");
 			}
 
@@ -112,7 +113,7 @@ namespace FinPlan.Web.Controllers
 
 			if (result.IsSuccessful)
 			{
-				TempData["message"] = "account has been successfully updated";
+				FlashMessage.SetMessage(TempData, "account has been successfully updated");
 				return RedirectToAction("AccountView", new { id = model.Id });
 			}
 
@@ -198,7 +199,7 @@ namespace FinPlan.Web.Controllers
 					return RedirectToAction("AccountView", new { id = model.AccountId });
 				}
 
-				TempData["message"] = "Failed to import bank statement";
+				FlashMessage.SetMessage(TempData, "Failed to import bank statement");
 				return View(model);
 			}
 			else
@@ -238,7 +239,7 @@ namespace FinPlan.Web.Controllers
 			var result = await _service.Send(new UpdateTransactionCommand(model.MapToDto(), userId));
 			if (result.IsSuccessful)
 			{
-				TempData["message"] = "Transaction has been successfully updated";
+				FlashMessage.SetMessage(TempData, "Transaction has been successfully updated");
 				return RedirectToAction("AccountView", new { id = model.AccountId });
 			}
 
@@ -258,12 +259,11 @@ namespace FinPlan.Web.Controllers
 			var result = await _service.Send(new DeleteTransactionCommand(transactionId, userId));
 			if (result.IsSuccessful)
 			{
-				TempData["message"] = "Transaction has been successfully deleted";
+				FlashMessage.SetMessage(TempData, "Transaction has been successfully deleted");
 			}
 			else
 			{
-				TempData["message"] = string.Join("<br/>", result.ErrorMessages);
-				TempData["error"] = true;
+				FlashMessage.SetMessage(TempData, string.Join("<br/>", result.ErrorMessages), true);
 			}
 
 			return RedirectToAction("AccountView", new { id = accountId });
@@ -290,7 +290,7 @@ namespace FinPlan.Web.Controllers
 			var result = await _service.Send(new CreateTransactionCommand(model.AccountId, model.MapToDto(), userId));
 			if (result.IsSuccessful)
 			{
-				TempData["message"] = "Transaction has been successfully created";
+				FlashMessage.SetMessage(TempData, "Transaction has been successfully created");
 				return RedirectToAction("AccountView", new { id = model.AccountId });
 			}
 

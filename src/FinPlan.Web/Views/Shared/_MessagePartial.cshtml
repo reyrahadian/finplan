@@ -1,7 +1,8 @@
-﻿@if (@TempData["message"] != null)
+﻿@using FinPlan.Web.Utils
+@if (!string.IsNullOrWhiteSpace(FlashMessage.GetMessage(TempData)))
 {
-	var alertTypeClassName = TempData["error"] == null ? "alert-success" : "alert-danger";
+	var alertTypeClassName = FlashMessage.IsError(TempData) ? "alert-danger" : "alert-success";
 	<div class="alert @alertTypeClassName" role="alert">
-		@TempData["message"]
+		@FlashMessage.GetMessage(TempData)
 	</div>
 }
