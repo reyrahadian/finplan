@@ -25,5 +25,13 @@ namespace FinPlan.Infrastructure.EntityFramework
 
 			return result != 0;
 		}
+
+		public async Task<bool> DeleteByIdAsync(int id)
+		{
+			_dbContext.Remove(await _dbContext.Transactions.FindAsync(id));
+			var result = await _dbContext.SaveChangesAsync();
+
+			return result != 0;
+		}
 	}
 }

@@ -31,7 +31,7 @@ namespace FinPlan.ApplicationService.Transactions
 		{
 			var transactions = await _accountRepository.GetTransactionsByAccountIdAsync(request.AccountId);
 
-			return transactions.Select(x => TransactionDtoMapper.Map(x)).ToList();
+			return transactions.OrderByDescending(x => x.Date).Select(x => TransactionDtoMapper.Map(x)).ToList();
 		}
 	}
 }

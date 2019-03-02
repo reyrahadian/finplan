@@ -16,7 +16,7 @@ namespace FinPlan.Domain.Accounts
 
 		public Response AddTransactionsByUserId(IEnumerable<Transaction> transactions, string userId)
 		{
-			if (Owner.Id != userId)
+			if (!HasAccess(userId))
 			{
 				return new Response(new List<string>
 						{$"The user with id:{userId} does not have access to add transaction to this account"});
@@ -24,6 +24,16 @@ namespace FinPlan.Domain.Accounts
 
 			Transactions.AddRange(transactions);
 			return new Response(true);
+		}
+
+		public Response AddTransactionByUserId(Transaction transaction, string userId)
+		{
+			return AddTransactionsByUserId(new List<Transaction> {transaction}, userId);
+		}
+
+		public bool HasAccess(string userId)
+		{
+			return Owner.Id == userId;
 		}
 	}
 }

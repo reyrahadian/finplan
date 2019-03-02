@@ -216,7 +216,7 @@ namespace FinPlan.Web.Controllers
 
 		public async Task<IActionResult> EditTransaction(int accountId, int transactionId)
 		{
-			var userId = (await _userManager.GetUserAsync(User)).Id;
+			var userId = await GetUserIdAsync();
 			var transaction = await _service.Send(new GetTransactionByIdQuery(transactionId, userId));
 
 			var model = new TransactionFormViewModel();
@@ -234,7 +234,7 @@ namespace FinPlan.Web.Controllers
 				return View(model);
 			}
 
-			var userId = (await _userManager.GetUserAsync(User)).Id;
+			var userId = await GetUserIdAsync();
 			var result = await _service.Send(new UpdateTransactionCommand(model.MapToDto(), userId));
 			if (result.IsSuccessful)
 			{
@@ -246,9 +246,56 @@ namespace FinPlan.Web.Controllers
 			return View(model);
 		}
 
-		public IActionResult DeleteTransaction()
+		private async Task<string> GetUserIdAsync()
 		{
-			throw new System.NotImplementedException();
+			var userId = (await _userManager.GetUserAsync(User)).Id;
+			return userId;
+		}
+
+		public async Task<IActionResult> DeleteTransaction(int accountId, int transactionId)
+		{
+			var userId = await GetUserIdAsync();
+			var result = await _service.Send(new DeleteTransactionCommand(transactionId, userId));
+			if (result.IsSuccessful)
+			{
+				TempData["message"] = "Transaction has been successfully deleted";
+			}
+			else
+			{
+				TempData["message"] = string.Join("<br/>", result.ErrorMessages);
+				TempData["error"] = true;
+			}
+
+			return RedirectToAction("AccountView", new { id = accountId });
+		}
+
+		public IActionResult CreateTransaction(int accountId)
+		{
+			var model = new TransactionFormViewModel();
+			model.AccountId = accountId;
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> CreateTransaction(TransactionFormViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			var userId = await GetUserIdAsync();
+			var result = await _service.Send(new CreateTransactionCommand(model.AccountId, model.MapToDto(), userId));
+			if (result.IsSuccessful)
+			{
+				TempData["message"] = "Transaction has been successfully created";
+				return RedirectToAction("AccountView", new { id = model.AccountId });
+			}
+
+			result.ErrorMessages.ForEach(x => ModelState.AddModelError("", x));
+			return View(model);
 		}
 	}
 }

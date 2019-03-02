@@ -1,6 +1,7 @@
 ﻿@if (@TempData["message"] != null)
 {
-	<div class="alert alert-success" role="alert">
+	var alertTypeClassName = TempData["error"] == null ? "alert-success" : "alert-danger";
+	<div class="alert @alertTypeClassName" role="alert">
 		@TempData["message"]
 	</div>
 }

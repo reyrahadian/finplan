@@ -6,5 +6,6 @@ namespace FinPlan.Domain.Transactions
 	{
 		Task<Transaction> GetTransactionByIdAsync(int id);
 		Task<bool> UpdateTransactionAsync(Transaction transaction);
+		Task<bool> DeleteByIdAsync(int id);
 	}
 }
