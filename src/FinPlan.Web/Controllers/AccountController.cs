@@ -131,7 +131,8 @@ namespace FinPlan.Web.Controllers
 			return View("Index");
 		}
 
-		public async Task<IActionResult> AccountView(int id)
+		private const int TransactionsPerPage = 50;
+		public async Task<IActionResult> AccountView(int id, AccountViewModel model, int page = 0)
 		{
 			var account = await _service.Send(new GetAccountByIdQuery { Id = id });
 			if (account == null)
@@ -139,14 +140,14 @@ namespace FinPlan.Web.Controllers
 				return NotFound();
 			}
 
-			var model = new AccountViewModel();
+			model.Id = id;
 			model.Account = account;
-			var transactions = await _service.Send(new GetTransactionsByAccountIdQuery(id));
-			model.Account.Transactions = transactions;
+			var result = await _service.Send(new SearchTransactionsQuery(model.Account.Id, model.SearchKeyWord, page, TransactionsPerPage));
+			model.PaginatedTransactions = result;
 
 			return View(model);
 		}
-
+		
 		public IActionResult ImportBankStatement(int id)
 		{
 			return View(new ImportBankStatementViewModel

@@ -2,19 +2,50 @@
 @model FinPlan.Web.Models.Account.AccountViewModel
 
 @{
-	ViewBag.Title = "title";
+	ViewBag.Title = "Account View";
 	Layout = "_Layout";
 }
 
 <h2>@Model.Account.Name</h2>
 <partial name="_MessagePartial" />
 <div>
-	<a asp-controller="Account" asp-action="CreateTransaction" asp-route-accountId="@Model.Account.Id">Create Transaction</a> |
-	<a asp-controller="Account" asp-action="ImportBankStatement" asp-route-id="@Model.Account.Id">Import Bank Statement</a> |
-	<a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.Account.Id">Edit Account</a> |
+	<a asp-controller="Account" asp-action="CreateTransaction" asp-route-accountId="@Model.Id">Create Transaction</a> |
+	<a asp-controller="Account" asp-action="ImportBankStatement" asp-route-id="@Model.Id">Import Bank Statement</a> |
+	<a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.Id">Edit Account</a> |
 </div>
-
-@if (Model.Account.Transactions.Any())
+<div>
+	<form asp-controller="Account" asp-action="AccountView" method="get">
+		<input asp-for="SearchKeyWord" placeholder="Enter a keyword" />
+		<button type="submit">Search</button>
+		@if (Model.PaginatedTransactions.Result.Any())
+		{
+			<input name="page" type="hidden" />
+			<div>
+				@if (Model.PaginatedTransactions.HasPreviousPage())
+				{
+					<button type="submit" onclick="setPageIndex(@(Model.PaginatedTransactions.PageIndex - 1))">Previous</button>
+				}
+				@if (Model.PaginatedTransactions.HasNextPage())
+				{
+					<button type="submit" onclick="setPageIndex(@(Model.PaginatedTransactions.PageIndex + 1))">Next</button>
+				}
+			</div>
+		}
+	</form>
+</div>
+@if (Model.PaginatedTransactions.Result.Any())
 {
-	@await Component.InvokeAsync(nameof(TransactionListing), new { transactions = Model.Account.Transactions, showActionButtons = true })
+	<div class="alert alert-info">
+		Displaying @Model.PaginatedTransactions.Result.Count of @Model.PaginatedTransactions.TotalRecords
+	</div>
+	@await Component.InvokeAsync(nameof(TransactionListing), new { transactions = Model.PaginatedTransactions.Result, showActionButtons = true })
+}
+
+@section scripts
+	{
+	<script type="text/javascript">
+		function setPageIndex(pageIndex) {
+			$('input[name="page"]').val(pageIndex);
+		}
+	</script>
 }
