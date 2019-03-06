@@ -18,8 +18,9 @@ namespace FinPlan.Infrastructure.Bootstrapper
 		public static void InitializeServices(IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(
-					configuration.GetConnectionString("DefaultConnection")));
+				options
+					.UseLazyLoadingProxies()
+					.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 			services.AddDefaultIdentity<IdentityUser>()
 				//.AddDefaultUI(UIFramework.Bootstrap4)
 				.AddEntityFrameworkStores<ApplicationDbContext>();

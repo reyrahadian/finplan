@@ -13,7 +13,7 @@ namespace FinPlan.Domain.Accounts
 		public string Currency { get; set; } = "AUD";
 		public AccountCategory Category { get; set; } = AccountCategory.SpendingAndSaving;
 		public AccountType Type { get; set; } = AccountType.Checking;
-		public IdentityUser Owner { get; set; }
+		public virtual IdentityUser Owner { get; set; }
 		public virtual List<Transaction> Transactions { get; set; } = new List<Transaction>();
 
 		public Response AddTransactionsByUserId(IEnumerable<Transaction> transactions, string userId)

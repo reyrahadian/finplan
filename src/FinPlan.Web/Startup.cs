@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Profiling;
 
 namespace FinPlan.Web
 {
@@ -49,6 +50,11 @@ namespace FinPlan.Web
 					options.LoginPath = "/auth/login";
 					options.AccessDeniedPath = "/auth/denied";
 				});
+
+			services.AddMiniProfiler(options =>
+			{
+				options.PopupRenderPosition = RenderPosition.Right;
+			}).AddEntityFramework();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +77,8 @@ namespace FinPlan.Web
 			//app.UseCookiePolicy();
 
 			app.UseAuthentication();
+
+			app.UseMiniProfiler();
 
 			app.UseMvc(routes =>
 			{

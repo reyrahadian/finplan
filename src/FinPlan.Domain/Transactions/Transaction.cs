@@ -10,9 +10,9 @@ namespace FinPlan.Domain.Transactions
 		public decimal Amount { get; set; }
 		public string Note { get; set; }
 		public DateTime Date { get; set; }
-		public TransactionCategory TransactionCategory { get; set; }
+		public virtual TransactionCategory TransactionCategory { get; set; }
 		public TransactionType Type { get; set; }
-		public Account Account { get; set; }
+		public virtual Account Account { get; set; }
 
 		public bool HasAccess(string userId)
 		{
