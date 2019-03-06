@@ -22,8 +22,12 @@ namespace FinPlan.ApplicationService.Accounts
         public async Task<AccountDto> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
         {
             var account = await _accountRepository.GetAccountByIdAsync(request.Id);
+	        if (account == null)
+	        {
+		        return null;
+	        }
 
-            return new AccountDto
+	        return new AccountDto
             {
                 Id = account.Id,
                 Name = account.Name,

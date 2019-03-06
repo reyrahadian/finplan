@@ -10,7 +10,7 @@ namespace FinPlan.ApplicationService.Accounts
 		public string Currency { get; set; }
 		public string Category { get; set; }
 		public string Type { get; set; }
-		public string Owner { get; set; }
+		public string UserId { get; set; }
 		public List<TransactionDto> Transactions { get; set; } = new List<TransactionDto>();
 	}
 }

@@ -16,7 +16,7 @@ namespace FinPlan.ApplicationService.Accounts.Mappers
 				Category = account.Category.ToString(),
 				Name = account.Name,
 				Transactions = account.Transactions.Select(x => TransactionDtoMapper.Map(x)).ToList(),
-				Owner = account.Owner.Id
+				UserId = account.Owner.Id
 			};
 		}
 	}

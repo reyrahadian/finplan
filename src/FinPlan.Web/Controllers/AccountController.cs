@@ -59,8 +59,8 @@ namespace FinPlan.Web.Controllers
 					Name = model.Name,
 					Category = model.Category.ToString(),
 					Type = model.Type.ToString(),
-					Owner = User.Identity.Name
-				})
+					UserId = (await _userManager.GetUserAsync(User)).Id
+		})
 			);
 			if (result.IsSuccessful)
 			{

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FinPlan.Domain;
-using FinPlan.Domain.Transactions;
+﻿using FinPlan.Domain.Transactions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FinPlan.Infrastructure.EntityFramework
 {
@@ -15,7 +14,10 @@ namespace FinPlan.Infrastructure.EntityFramework
 			dbContext.Database.Migrate();
 
 			var defaultUser = SeedDefaultUser(userManager);
-			if (defaultUser == null) throw new Exception("Cannot create a default user");
+			if (defaultUser == null)
+			{
+				throw new Exception("Cannot create a default user");
+			}
 
 			SeedCategories(dbContext);
 		}
@@ -25,19 +27,28 @@ namespace FinPlan.Infrastructure.EntityFramework
 		{
 			const string userName = "rahadian.rey@gmail.com";
 			var defaultUser = userManager.FindByNameAsync(userName).Result;
-			if (defaultUser != null) return defaultUser;
+			if (defaultUser != null)
+			{
+				return defaultUser;
+			}
 
 			defaultUser = new IdentityUser(userName);
 			defaultUser.Email = defaultUser.UserName;
 			var result = userManager.CreateAsync(defaultUser, "Pass@word1").Result;
-			if (result.Succeeded) return defaultUser;
+			if (result.Succeeded)
+			{
+				return defaultUser;
+			}
 
 			return null;
 		}
 
 		private static void SeedCategories(ApplicationDbContext dbContext)
 		{
-			if (dbContext.Categories.Any()) return;
+			if (dbContext.Categories.Any())
+			{
+				return;
+			}
 
 			var categories = new List<TransactionCategory>();
 			categories.Add(new TransactionCategory("Home"));

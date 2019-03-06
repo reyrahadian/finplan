@@ -1,4 +1,5 @@
 ﻿using FinPlan.ApplicationService;
+using FinPlan.Domain;
 using FinPlan.Domain.Accounts;
 using FinPlan.Domain.Transactions;
 using FinPlan.Infrastructure.CsvParser;
@@ -31,6 +32,7 @@ namespace FinPlan.Infrastructure.Bootstrapper
 			services.AddScoped<IBankStatementCsvParser, BankStatementCsvParser>();
 			services.AddScoped<ITransactionRepository, TransactionRepository>();
 			services.AddScoped<IAccountBalanceInfoCalculator, AccountBalanceInfoCalculator>();
+			services.AddScoped<IUserRepository, UserRepository>();
 		}
 
 		public static void InitializeDb(IServiceProvider serviceProvider)
