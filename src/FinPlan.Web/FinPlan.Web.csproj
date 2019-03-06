@@ -6,6 +6,10 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="Styles\finplan.scss" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="mediatr" Version="6.0.0" />

@@ -1,6 +1,8 @@
-﻿using FinPlan.Domain.Transactions;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FinPlan.Domain.Transactions;
+using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 
 namespace FinPlan.Domain.Accounts
 {
@@ -19,7 +21,7 @@ namespace FinPlan.Domain.Accounts
 			if (!HasAccess(userId))
 			{
 				return new Response(new List<string>
-						{$"The user with id:{userId} does not have access to add transaction to this account"});
+					{$"The user with id:{userId} does not have access to add transaction to this account"});
 			}
 
 			Transactions.AddRange(transactions);
@@ -34,6 +36,16 @@ namespace FinPlan.Domain.Accounts
 		public bool HasAccess(string userId)
 		{
 			return Owner.Id == userId;
+		}
+
+		public async Task<decimal> GetTotalDebit(IAccountBalanceInfoCalculator accountBalanceInfoCalculator)
+		{
+			return await accountBalanceInfoCalculator.GetTotalDebitAsync(Id);
+		}
+
+		public async Task<decimal> GetTotalCredit(IAccountBalanceInfoCalculator accountBalanceInfoCalculator)
+		{
+			return await accountBalanceInfoCalculator.GetTotalCreditAsync(Id);
 		}
 	}
 }

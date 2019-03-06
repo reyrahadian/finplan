@@ -1,14 +1,15 @@
 ﻿using FinPlan.ApplicationService;
 using FinPlan.Domain.Accounts;
+using FinPlan.Domain.Transactions;
 using FinPlan.Infrastructure.CsvParser;
 using FinPlan.Infrastructure.EntityFramework;
+using FinPlan.Infrastructure.EntityFramework.Accounts;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using FinPlan.Domain.Transactions;
 
 namespace FinPlan.Infrastructure.Bootstrapper
 {
@@ -28,6 +29,7 @@ namespace FinPlan.Infrastructure.Bootstrapper
 			services.AddScoped<IAccountRepository, AccountRepository>();
 			services.AddScoped<IBankStatementCsvParser, BankStatementCsvParser>();
 			services.AddScoped<ITransactionRepository, TransactionRepository>();
+			services.AddScoped<IAccountBalanceInfoCalculator, AccountBalanceInfoCalculator>();
 		}
 
 		public static void InitializeDb(IServiceProvider serviceProvider)

@@ -9,6 +9,22 @@
 <h2>@Model.Account.Name</h2>
 <partial name="_MessagePartial" />
 <div>
+	<table border="1px">
+		<thead>
+			<tr>
+				<th>Debit</th>
+				<th>Credit</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>@Model.TotalDebit.ToString("C2")</td>
+				<td>@Model.TotalCredit.ToString("C2")</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div>
 	<a asp-controller="Account" asp-action="CreateTransaction" asp-route-accountId="@Model.Id">Create Transaction</a> |
 	<a asp-controller="Account" asp-action="ImportBankStatement" asp-route-id="@Model.Id">Import Bank Statement</a> |
 	<a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.Id">Edit Account</a> |

@@ -140,6 +140,10 @@ namespace FinPlan.Web.Controllers
 				return NotFound();
 			}
 
+			var userId = (await _userManager.GetUserAsync(User)).Id;
+			var accountBalanceInfo = await _service.Send(new GetAccountBalanceInfoQuery(id, userId));
+			model.TotalDebit = accountBalanceInfo.TotalDebit;
+			model.TotalCredit = accountBalanceInfo.TotalCredit;
 			model.Id = id;
 			model.Account = account;
 			var result = await _service.Send(new SearchTransactionsQuery(model.Account.Id, model.SearchKeyWord, page, TransactionsPerPage));
@@ -147,7 +151,7 @@ namespace FinPlan.Web.Controllers
 
 			return View(model);
 		}
-		
+
 		public IActionResult ImportBankStatement(int id)
 		{
 			return View(new ImportBankStatementViewModel

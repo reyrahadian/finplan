@@ -1,11 +1,11 @@
-﻿using FinPlan.Domain.Accounts;
-using FinPlan.Domain.Transactions;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FinPlan.Domain.Accounts;
+using FinPlan.Domain.Transactions;
+using Microsoft.EntityFrameworkCore;
 
-namespace FinPlan.Infrastructure.EntityFramework
+namespace FinPlan.Infrastructure.EntityFramework.Accounts
 {
 	public class AccountRepository : IAccountRepository
 	{

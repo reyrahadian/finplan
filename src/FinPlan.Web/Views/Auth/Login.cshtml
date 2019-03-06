@@ -1,37 +1,49 @@
 ﻿@model AuthenticationFormViewModel
 @{
-    Layout = null;
+	Layout = null;
 }
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="generator" content="">
-    <title>FinPlan - Login</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="generator" content="">
+	<title>FinPlan - Login</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Bootstrap core CSS -->
+	@*<link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet">*@
 
-    <!-- Custom styles for this template -->
-    <link href="~/css/signin.css" rel="stylesheet">
+	<!-- Custom styles for this template -->
+	@*<link href="~/css/signin.css" rel="stylesheet">*@
+
+	<link href="~/css/form-signin.css" rel="stylesheet">
 </head>
-<body class="text-center">
-    <div asp-validation-summary="All"></div>
-    <form asp-controller="Auth" asp-action="Login" class="form-signin">
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input asp-for="Email" class="form-control" placeholder="Email address" required autofocus />
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input asp-for="Password" class="form-control" placeholder="Password" required type="password"/>
-        <div class="checkbox mb-3">
-            <label>
-                <input asp-for="RememberMe" />
-            </label>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    </form>
+<body>
+	<div class="form-signin">
+		<form asp-controller="Auth" asp-action="Login" class="form-signin__form">
+			<div asp-validation-summary="All" class="validation-summary"></div>
+			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+			<div>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input asp-for="Email" class="form-control" placeholder="Email address" required autofocus />
+			</div>
+			<div>
+				<label for="inputPassword" class="sr-only">Password</label>
+				<input asp-for="Password" class="form-control" placeholder="Password" required type="password" />
+			</div>
+			<div class="checkbox mb-3">
+				<label>
+					Remember me
+					<input asp-for="RememberMe" />
+				</label>
+			</div>
+			<div>
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			</div>
+		</form>
+	</div>
+
 </body>
 </html>
