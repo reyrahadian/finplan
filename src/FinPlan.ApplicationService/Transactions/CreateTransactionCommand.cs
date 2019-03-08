@@ -1,9 +1,10 @@
 ﻿using FinPlan.ApplicationService.Transactions.Mappers;
-using FinPlan.Domain.Accounts;
+using FinPlan.Domain;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.ApplicationService.Transactions
 {
@@ -25,16 +26,22 @@ namespace FinPlan.ApplicationService.Transactions
 
 	public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, CommandResponse>
 	{
-		private readonly IAccountRepository _accountRepository;
+		private readonly IUserRepository _userRepository;
 
-		public CreateTransactionCommandHandler(IAccountRepository accountRepository)
+		public CreateTransactionCommandHandler(IUserRepository userRepository)
 		{
-			_accountRepository = accountRepository;
+			_userRepository = userRepository;
 		}
 
 		public async Task<CommandResponse> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
 		{
-			var account = await _accountRepository.GetAccountByIdAsync(request.AccountId);
+			var user = await _userRepository.GetUserByIdAsync(request.UserId);
+
+			var account = user?.GetAccount(request.AccountId);
+			if (account == null)
+			{
+				return null;
+			}
 
 			if (!account.HasAccess(request.UserId))
 			{
@@ -45,7 +52,7 @@ namespace FinPlan.ApplicationService.Transactions
 			var result = account.AddTransactionByUserId(transaction, request.UserId);
 			if (result.IsSuccessful)
 			{
-				await _accountRepository.UpdateAccountAsync(account);
+				await _userRepository.UpdateUserAsync(user);
 				return new CommandResponse(true);
 			}
 

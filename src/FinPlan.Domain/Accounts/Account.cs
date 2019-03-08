@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using FinPlan.Domain.Transactions;
+using FinPlan.Domain.Users;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,7 +14,7 @@ namespace FinPlan.Domain.Accounts
 		public string Currency { get; set; } = "AUD";
 		public AccountCategory Category { get; set; } = AccountCategory.SpendingAndSaving;
 		public AccountType Type { get; set; } = AccountType.Checking;
-		public virtual IdentityUser Owner { get; set; }
+		public virtual User Owner { get; set; }
 		public virtual List<Transaction> Transactions { get; set; } = new List<Transaction>();
 
 		public Response AddTransactionsByUserId(IEnumerable<Transaction> transactions, string userId)

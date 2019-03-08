@@ -1,43 +1,66 @@
 ﻿using FinPlan.Domain;
 using FinPlan.Domain.Accounts;
+using JetBrains.Annotations;
 using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.ApplicationService.Accounts
 {
 	public class CreateAccountCommand : IRequest<CommandResponse>
 	{
-		public CreateAccountCommand(AccountDto account)
+		public CreateAccountCommand([NotNull] AccountDto account, [NotNull] string userId)
 		{
+			if (account == null)
+			{
+				throw new ArgumentNullException(nameof(account));
+			}
+
+			if (string.IsNullOrWhiteSpace(userId))
+			{
+				throw new ArgumentException(nameof(userId));
+			}
+
 			Account = account;
+			UserId = userId;
 		}
 
 		public AccountDto Account { get; }
+
+		public string UserId { get; }
 	}
 
 	public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, CommandResponse>
 	{
-		private readonly IAccountRepository _accountRepository;
 		private readonly IUserRepository _userRepository;
 
-		public CreateAccountCommandHandler(IAccountRepository accountRepository, IUserRepository userRepository)
+		public CreateAccountCommandHandler([NotNull]IUserRepository userRepository)
 		{
-			_accountRepository = accountRepository;
 			_userRepository = userRepository;
 		}
 
-		async Task<CommandResponse> IRequestHandler<CreateAccountCommand, CommandResponse>.Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+		public async Task<CommandResponse> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
 		{
-			var account = new Account();
-			account.Name = request.Account.Name;
-			account.Currency = request.Account.Currency;
-			account.Category = Enum.Parse<Domain.Accounts.AccountCategory>(request.Account.Category);
-			account.Type = Enum.Parse<Domain.Accounts.AccountType>(request.Account.Type);
-			account.Owner = await _userRepository.GetUserByIdAsync(request.Account.UserId);
+			Enum.TryParse<Domain.Accounts.AccountCategory>(request.Account.Category, out var category);
+			Enum.TryParse<Domain.Accounts.AccountType>(request.Account.Type, out var type);
+			var account = new Account
+			{
+				Name = request.Account.Name,
+				Currency = request.Account.Currency,
+				Category = category,
+				Type = type
+			};
 
-			var isSuccessful = await _accountRepository.CreateAccountAsync(account);
+			var user = await _userRepository.GetUserByIdAsync(request.UserId);
+			if (user == null)
+			{
+				return new CommandResponse("User doesn't exist");
+			}
+
+			user.AddAccount(account);
+			var isSuccessful = await _userRepository.UpdateUserAsync(user);
 
 			return new CommandResponse(isSuccessful);
 		}

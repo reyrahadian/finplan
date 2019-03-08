@@ -4,14 +4,16 @@ using FinPlan.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FinPlan.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190308121803_ExtendUser")]
+    partial class ExtendUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,7 +256,7 @@ namespace FinPlan.Infrastructure.EntityFramework.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("FinPlan.Domain.Users.User", b =>
+            modelBuilder.Entity("FinPlan.Domain.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -263,7 +265,7 @@ namespace FinPlan.Infrastructure.EntityFramework.Migrations
 
             modelBuilder.Entity("FinPlan.Domain.Accounts.Account", b =>
                 {
-                    b.HasOne("FinPlan.Domain.Users.User", "Owner")
+                    b.HasOne("FinPlan.Domain.User", "Owner")
                         .WithMany("Accounts")
                         .HasForeignKey("OwnerId");
                 });

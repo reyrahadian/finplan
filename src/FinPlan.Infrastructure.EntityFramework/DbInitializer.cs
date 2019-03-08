@@ -1,15 +1,17 @@
-﻿using FinPlan.Domain.Transactions;
+﻿using FinPlan.Domain;
+using FinPlan.Domain.Transactions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.Infrastructure.EntityFramework
 {
 	public static class DbInitializer
 	{
-		public static void Initialize(ApplicationDbContext dbContext, UserManager<IdentityUser> userManager)
+		public static void Initialize(ApplicationDbContext dbContext, UserManager<User> userManager)
 		{
 			dbContext.Database.Migrate();
 
@@ -23,7 +25,7 @@ namespace FinPlan.Infrastructure.EntityFramework
 		}
 
 
-		private static IdentityUser SeedDefaultUser(UserManager<IdentityUser> userManager)
+		private static User SeedDefaultUser(UserManager<User> userManager)
 		{
 			const string userName = "rahadian.rey@gmail.com";
 			var defaultUser = userManager.FindByNameAsync(userName).Result;
@@ -32,7 +34,8 @@ namespace FinPlan.Infrastructure.EntityFramework
 				return defaultUser;
 			}
 
-			defaultUser = new IdentityUser(userName);
+			defaultUser = new User();
+			defaultUser.UserName = userName;
 			defaultUser.Email = defaultUser.UserName;
 			var result = userManager.CreateAsync(defaultUser, "Pass@word1").Result;
 			if (result.Succeeded)

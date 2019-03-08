@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.Infrastructure.Bootstrapper
 {
@@ -22,7 +23,7 @@ namespace FinPlan.Infrastructure.Bootstrapper
 				options
 					.UseLazyLoadingProxies()
 					.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-			services.AddDefaultIdentity<IdentityUser>()
+			services.AddDefaultIdentity<User>()
 				//.AddDefaultUI(UIFramework.Bootstrap4)
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -38,7 +39,7 @@ namespace FinPlan.Infrastructure.Bootstrapper
 		public static void InitializeDb(IServiceProvider serviceProvider)
 		{
 			var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
-			DbInitializer.Initialize(context, serviceProvider.GetRequiredService<UserManager<IdentityUser>>());
+			DbInitializer.Initialize(context, serviceProvider.GetRequiredService<UserManager<User>>());
 		}
 	}
 }

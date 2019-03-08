@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure.CsvParser", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinPlan.Domain.Test", "src\FinPlan.Domain.Test\FinPlan.Domain.Test.csproj", "{6FD73C24-FF05-475E-941D-BC0FD93EEC1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinPlan.ApplicationService.Test", "src\FinPlan.ApplicationService.Test\FinPlan.ApplicationService.Test.csproj", "{B3E410B6-91D5-4308-B4FC-53E52E37F023}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{6FD73C24-FF05-475E-941D-BC0FD93EEC1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FD73C24-FF05-475E-941D-BC0FD93EEC1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FD73C24-FF05-475E-941D-BC0FD93EEC1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3E410B6-91D5-4308-B4FC-53E52E37F023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3E410B6-91D5-4308-B4FC-53E52E37F023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3E410B6-91D5-4308-B4FC-53E52E37F023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3E410B6-91D5-4308-B4FC-53E52E37F023}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{16546E17-2108-4751-ADC7-7A900355E48D} = {0B23FB3F-4963-49FE-9F93-83BFF2A51700}
 		{0B23FB3F-4963-49FE-9F93-83BFF2A51700} = {8A0169BC-324E-4F20-87D4-98C60FE59ADB}
 		{6FD73C24-FF05-475E-941D-BC0FD93EEC1B} = {19B713C1-4DE8-448F-BE2D-97B3CF2D206F}
+		{B3E410B6-91D5-4308-B4FC-53E52E37F023} = {0060A06F-159F-4E33-B004-1A800F730725}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {019F0DB1-5C9C-42F6-AC49-355D439F3750}

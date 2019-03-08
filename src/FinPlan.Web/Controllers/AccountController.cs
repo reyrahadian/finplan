@@ -1,6 +1,7 @@
 ﻿using FinPlan.ApplicationService.Accounts;
 using FinPlan.ApplicationService.Currencies;
 using FinPlan.ApplicationService.Transactions;
+using FinPlan.Domain;
 using FinPlan.Web.Models.Account;
 using FinPlan.Web.Utils;
 using MediatR;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.Web.Controllers
 {
@@ -18,10 +20,10 @@ namespace FinPlan.Web.Controllers
 	{
 		private readonly IHostingEnvironment _hostingEnvironment;
 		private readonly IMediator _service;
-		private readonly UserManager<IdentityUser> _userManager;
+		private readonly UserManager<User> _userManager;
 
 		public AccountController(IMediator service, IHostingEnvironment hostingEnvironment,
-			UserManager<IdentityUser> userManager)
+			UserManager<User> userManager)
 		{
 			_service = service;
 			_hostingEnvironment = hostingEnvironment;
@@ -59,9 +61,9 @@ namespace FinPlan.Web.Controllers
 					Name = model.Name,
 					Category = model.Category.ToString(),
 					Type = model.Type.ToString(),
-					UserId = (await _userManager.GetUserAsync(User)).Id
-		})
-			);
+				},
+				(await _userManager.GetUserAsync(User)).Id
+			));
 			if (result.IsSuccessful)
 			{
 				FlashMessage.SetMessage(TempData, "New account has been successfully created");
@@ -78,7 +80,8 @@ namespace FinPlan.Web.Controllers
 
 		public async Task<IActionResult> Edit(int id)
 		{
-			var account = await _service.Send(new GetAccountByIdQuery { Id = id });
+			var userId = (await _userManager.GetUserAsync(User)).Id;
+			var account = await _service.Send(new GetAccountByIdQuery(id, userId));
 			if (account == null)
 			{
 				return NotFound();
@@ -108,7 +111,8 @@ namespace FinPlan.Web.Controllers
 					Name = model.Name,
 					Category = model.Category.ToString(),
 					Type = model.Type.ToString()
-				}
+				},
+				(await _userManager.GetUserAsync(User)).Id
 			));
 
 			if (result.IsSuccessful)
@@ -124,9 +128,10 @@ namespace FinPlan.Web.Controllers
 			return View(model);
 		}
 
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			_service.Send(new DeleteAccountByIdCommand(id));
+			var userId = (await _userManager.GetUserAsync(User)).Id;
+			await _service.Send(new DeleteAccountByIdCommand(id, userId));
 
 			return View("Index");
 		}
@@ -134,13 +139,13 @@ namespace FinPlan.Web.Controllers
 		private const int TransactionsPerPage = 50;
 		public async Task<IActionResult> AccountView(int id, AccountViewModel model, int page = 0)
 		{
-			var account = await _service.Send(new GetAccountByIdQuery { Id = id });
+			var userId = (await _userManager.GetUserAsync(User)).Id;
+			var account = await _service.Send(new GetAccountByIdQuery(id, userId));
 			if (account == null)
 			{
 				return NotFound();
 			}
 
-			var userId = (await _userManager.GetUserAsync(User)).Id;
 			var accountBalanceInfo = await _service.Send(new GetAccountBalanceInfoQuery(id, userId));
 			model.TotalDebit = accountBalanceInfo.TotalDebit;
 			model.TotalCredit = accountBalanceInfo.TotalCredit;

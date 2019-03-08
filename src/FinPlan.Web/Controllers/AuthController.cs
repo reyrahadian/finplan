@@ -1,16 +1,18 @@
-﻿using FinPlan.Web.Models;
+﻿using FinPlan.Domain;
+using FinPlan.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.Web.Controllers
 {
 	public class AuthController : Controller
 	{
-		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly SignInManager<User> _signInManager;
 
-		public AuthController(SignInManager<IdentityUser> signInManager)
+		public AuthController(SignInManager<User> signInManager)
 		{
 			_signInManager = signInManager;
 		}

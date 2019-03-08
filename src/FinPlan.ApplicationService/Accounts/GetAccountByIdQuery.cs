@@ -1,39 +1,49 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using FinPlan.Domain.Accounts;
+﻿using FinPlan.Domain;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.ApplicationService.Accounts
 {
-    public class GetAccountByIdQuery : IRequest<AccountDto>
-    {
-        public int Id { get; set; }
-    }
+	public class GetAccountByIdQuery : IRequest<AccountDto>
+	{
+		public GetAccountByIdQuery(int accountId, string userId)
+		{
+			AccountId = accountId;
+			UserId = userId;
+		}
 
-    public class GetAccountByIdHandler : IRequestHandler<GetAccountByIdQuery, AccountDto>
-    {
-        private readonly IAccountRepository _accountRepository;
+		public int AccountId { get; }
+		public string UserId { get; }
+	}
 
-        public GetAccountByIdHandler(IAccountRepository accountRepository)
-        {
-            _accountRepository = accountRepository;
-        }
+	public class GetAccountByIdHandler : IRequestHandler<GetAccountByIdQuery, AccountDto>
+	{
+		private readonly IUserRepository _userRepository;
 
-        public async Task<AccountDto> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
-        {
-            var account = await _accountRepository.GetAccountByIdAsync(request.Id);
-	        if (account == null)
-	        {
-		        return null;
-	        }
+		public GetAccountByIdHandler(IUserRepository userRepository)
+		{
+			_userRepository = userRepository;
+		}
 
-	        return new AccountDto
-            {
-                Id = account.Id,
-                Name = account.Name,
-                Category = account.Category.ToString(),
-                Type = account.Type.ToString()
-            };
-        }
-    }
+		public async Task<AccountDto> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
+		{
+			var user = await _userRepository.GetUserByIdAsync(request.UserId);
+
+			var account = user?.GetAccount(request.AccountId);
+			if (account == null)
+			{
+				return null;
+			}
+
+			return new AccountDto
+			{
+				Id = account.Id,
+				Name = account.Name,
+				Category = account.Category.ToString(),
+				Type = account.Type.ToString()
+			};
+		}
+	}
 }

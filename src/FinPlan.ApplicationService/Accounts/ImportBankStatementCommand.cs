@@ -1,10 +1,11 @@
-﻿using FinPlan.Domain.Accounts;
+﻿using FinPlan.Domain;
 using FinPlan.Domain.Transactions;
 using MediatR;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.ApplicationService.Accounts
 {
@@ -19,12 +20,12 @@ namespace FinPlan.ApplicationService.Accounts
 	public class ImportBankStatementCommandHandler : IRequestHandler<ImportBankStatementCommand, CommandResponse>
 	{
 		private readonly IBankStatementCsvParser _bankStatementCsvParser;
-		private readonly IAccountRepository _accountRepository;
+		private readonly IUserRepository _userRepository;
 
-		public ImportBankStatementCommandHandler(IBankStatementCsvParser bankStatementCsvParser, IAccountRepository accountRepository)
+		public ImportBankStatementCommandHandler(IBankStatementCsvParser bankStatementCsvParser, IUserRepository userRepository)
 		{
 			_bankStatementCsvParser = bankStatementCsvParser;
-			_accountRepository = accountRepository;
+			_userRepository = userRepository;
 		}
 
 		public async Task<CommandResponse> Handle(ImportBankStatementCommand request, CancellationToken cancellationToken)
@@ -38,12 +39,18 @@ namespace FinPlan.ApplicationService.Accounts
 				Amount = x.Amount,
 				Type = Enum.Parse<TransactionType>(x.Type.ToString())
 			});
-			var account = await _accountRepository.GetAccountByIdAsync(request.AccountId);
+			var user = await _userRepository.GetUserByIdAsync(request.UserId);
+
+			var account = user?.GetAccount(request.AccountId);
+			if (account == null)
+			{
+				return null;
+			}
 
 			var result = account.AddTransactionsByUserId(transactions, request.UserId);
 			if (result.IsSuccessful)
 			{
-				var dbUpdateResult = await _accountRepository.UpdateAccountAsync(account);
+				var dbUpdateResult = await _userRepository.UpdateUserAsync(user);
 				return new CommandResponse(dbUpdateResult);
 			}
 

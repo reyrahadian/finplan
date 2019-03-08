@@ -9,6 +9,10 @@ namespace FinPlan.ApplicationService
 			Result = result;
 		}
 
+		public CommandResponse(string errorMessage, T result) : this(new List<string> { errorMessage }, result)
+		{
+		}
+
 		public CommandResponse(List<string> errorMessages, T result) : base(errorMessages)
 		{
 			Result = result;
@@ -22,6 +26,10 @@ namespace FinPlan.ApplicationService
 		public CommandResponse(bool isSuccessful)
 		{
 			IsSuccessful = isSuccessful;
+		}
+
+		public CommandResponse(string errorMessage) : this(new List<string> { errorMessage })
+		{
 		}
 
 		public CommandResponse(List<string> errorMessages)

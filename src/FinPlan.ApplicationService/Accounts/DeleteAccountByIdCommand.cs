@@ -1,40 +1,54 @@
-﻿using FinPlan.Domain.Accounts;
+﻿using FinPlan.Domain;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using FinPlan.Domain.Users;
 
 namespace FinPlan.ApplicationService.Accounts
 {
 	public class DeleteAccountByIdCommand : IRequest<CommandResponse>
 	{
-		public DeleteAccountByIdCommand(int id)
+		public DeleteAccountByIdCommand(int accountId, string userId)
 		{
-			Id = id;
+			AccountId = accountId;
+			UserId = userId;
 		}
 
-		public int Id { get; }
+		public int AccountId { get; }
+		public string UserId { get; }
 	}
 
 	public class DeleteAccountByIdCommandHandler : IRequestHandler<DeleteAccountByIdCommand, CommandResponse>
 	{
-		private readonly IAccountRepository _accountRepository;
+		private readonly IUserRepository _userRepository;
 
-		public DeleteAccountByIdCommandHandler(IAccountRepository accountRepository)
+		public DeleteAccountByIdCommandHandler(IUserRepository userRepository)
 		{
-			_accountRepository = accountRepository;
+			_userRepository = userRepository;
 		}
 
 		async Task<CommandResponse> IRequestHandler<DeleteAccountByIdCommand, CommandResponse>.Handle(DeleteAccountByIdCommand request, CancellationToken cancellationToken)
 		{
-			var account = await _accountRepository.GetAccountByIdAsync(request.Id);
-			if (account == null)
+			var user = await _userRepository.GetUserByIdAsync(request.UserId);
+			if (user == null)
 			{
-				//do something
+				return new CommandResponse($"User with id {request.UserId} does not exist");
 			}
 
-			var isSuccessful = await _accountRepository.DeleteByIdAsync(request.Id);
+			if (user.RemoveAccount(request.AccountId))
+			{
+				var result = await _userRepository.UpdateUserAsync(user);
+				if (!result)
+				{
+					return new CommandResponse($"Failed to delete account:{request.AccountId}");
+				}
 
-			return new CommandResponse(isSuccessful);
+				return new CommandResponse(result);
+			}
+			else
+			{
+				return new CommandResponse($"Cannot remove account");
+			}
 		}
 	}
 }
