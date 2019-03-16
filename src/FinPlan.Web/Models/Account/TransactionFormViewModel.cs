@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using FinPlan.ApplicationService.Accounts;
 
 namespace FinPlan.Web.Models.Account
 {
@@ -55,7 +56,11 @@ namespace FinPlan.Web.Models.Account
 				Amount = Amount,
 				Note = Note,
 				Category = Category,
-				Type = Type
+				Type = Type,
+				Account = new AccountDto
+				{
+					Id = AccountId
+				}
 			};
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿using FinPlan.ApplicationService.Accounts;
 using FinPlan.ApplicationService.Currencies;
 using FinPlan.ApplicationService.Transactions;
-using FinPlan.Domain;
+using FinPlan.Domain.Users;
 using FinPlan.Web.Models.Account;
 using FinPlan.Web.Utils;
 using MediatR;
@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FinPlan.Domain.Users;
 
 namespace FinPlan.Web.Controllers
 {
@@ -32,7 +31,8 @@ namespace FinPlan.Web.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			var accounts = await _service.Send(new GetAccountsRequestQuery());
+			var userId = (await _userManager.GetUserAsync(User)).Id;
+			var accounts = await _service.Send(new GetAccountsRequestQuery(userId));
 
 			return View(accounts);
 		}
@@ -133,7 +133,7 @@ namespace FinPlan.Web.Controllers
 			var userId = (await _userManager.GetUserAsync(User)).Id;
 			await _service.Send(new DeleteAccountByIdCommand(id, userId));
 
-			return View("Index");
+			return RedirectToAction("Index");
 		}
 
 		private const int TransactionsPerPage = 50;

@@ -1,4 +1,5 @@
 ﻿using FinPlan.Domain.Transactions;
+using FinPlan.Domain.Users;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -21,16 +22,24 @@ namespace FinPlan.ApplicationService.Transactions
 
 	public class UpdateTransactionCommandHandler : IRequestHandler<UpdateTransactionCommand, CommandResponse>
 	{
+		private readonly IUserRepository _userRepository;
 		private readonly ITransactionRepository _transactionRepository;
 
-		public UpdateTransactionCommandHandler(ITransactionRepository transactionRepository)
+		public UpdateTransactionCommandHandler(IUserRepository userRepository, ITransactionRepository transactionRepository)
 		{
+			_userRepository = userRepository;
 			_transactionRepository = transactionRepository;
 		}
 
 		public async Task<CommandResponse> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
 		{
-			var transaction = await _transactionRepository.GetTransactionByIdAsync(request.Transaction.Id);
+			var user = await _userRepository.GetUserByIdAsync(request.UserId);
+			if (user == null)
+			{
+				return new CommandResponse("User doesn't exist");
+			}
+
+			var transaction = user.GetAccountTransaction(request.Transaction.Account.Id, request.Transaction.Id);
 
 			if (!transaction.HasAccess(request.UserId))
 			{

@@ -1,10 +1,9 @@
-﻿using FinPlan.Domain;
+﻿using FinPlan.Domain.Users;
 using FinPlan.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using FinPlan.Domain.Users;
 
 namespace FinPlan.Web.Controllers
 {

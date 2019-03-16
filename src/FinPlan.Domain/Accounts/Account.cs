@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using FinPlan.Domain.Transactions;
+﻿using FinPlan.Domain.Transactions;
 using FinPlan.Domain.Users;
-using FluentAssertions;
-using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FinPlan.Domain.Accounts
 {
@@ -31,7 +29,7 @@ namespace FinPlan.Domain.Accounts
 
 		public Response AddTransactionByUserId(Transaction transaction, string userId)
 		{
-			return AddTransactionsByUserId(new List<Transaction> {transaction}, userId);
+			return AddTransactionsByUserId(new List<Transaction> { transaction }, userId);
 		}
 
 		public bool HasAccess(string userId)

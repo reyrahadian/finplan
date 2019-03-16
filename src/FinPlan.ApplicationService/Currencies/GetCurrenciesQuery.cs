@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using FinPlan.Domain.Currencies;
+using MediatR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FinPlan.Domain.Currencies;
-using MediatR;
 
 namespace FinPlan.ApplicationService.Currencies
 {

@@ -1,10 +1,9 @@
 ﻿using FinPlan.ApplicationService.Transactions.Mappers;
-using FinPlan.Domain;
+using FinPlan.Domain.Users;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using FinPlan.Domain.Users;
 
 namespace FinPlan.ApplicationService.Transactions
 {

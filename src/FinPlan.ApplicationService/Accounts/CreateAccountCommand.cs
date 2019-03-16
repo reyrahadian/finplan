@@ -1,11 +1,10 @@
-﻿using FinPlan.Domain;
-using FinPlan.Domain.Accounts;
+﻿using FinPlan.Domain.Accounts;
+using FinPlan.Domain.Users;
 using JetBrains.Annotations;
 using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using FinPlan.Domain.Users;
 
 namespace FinPlan.ApplicationService.Accounts
 {

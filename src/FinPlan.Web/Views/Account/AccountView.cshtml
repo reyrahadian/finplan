@@ -28,6 +28,7 @@
 	<a asp-controller="Account" asp-action="CreateTransaction" asp-route-accountId="@Model.Id">Create Transaction</a> |
 	<a asp-controller="Account" asp-action="ImportBankStatement" asp-route-id="@Model.Id">Import Bank Statement</a> |
 	<a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.Id">Edit Account</a> |
+	<a asp-controller="Account" asp-action="Delete" asp-route-id="@Model.Id">Delete Account</a>
 </div>
 <div>
 	<form asp-controller="Account" asp-action="AccountView" method="get">
